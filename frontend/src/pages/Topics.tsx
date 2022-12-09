@@ -1,6 +1,10 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { OpenTopic } from "../types"
+import TopicService from "../services/TopicService"
+import {
+  H2, SubContainer, Form, InputRow, ButtonRow, Button, Input, Table, TBody, Tr, Th, Td, TableContainer
+} from "../styles/styles"
 
 interface Props {
   topics: OpenTopic[],
@@ -9,6 +13,19 @@ interface Props {
 
 const Topics = (props: Props) => {
   const [newTopicContent, setNewTopicContent] = useState("")
+  const [topics, setTopics] = useState<OpenTopic[]>([])
+
+  useEffect(() => {
+    getAllTopics()
+  }, [])
+
+  const getAllTopics = async() => {
+    TopicService.getTopics()
+      .then((response) => {
+        console.log(response.data)
+        setTopics(response.data)
+      })
+  }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -18,7 +35,13 @@ const Topics = (props: Props) => {
         creator: user,
         content: newTopicContent
       }
-      props.addNewTopic(newTopic)
+      //props.addNewTopic(newTopic)
+      console.log(newTopic)
+      TopicService.createTopic(newTopic)
+        .then((response) => {
+          console.log(response.data)
+          getAllTopics()
+        })
     }
 
     setNewTopicContent("")
@@ -30,23 +53,38 @@ const Topics = (props: Props) => {
 
   return(
     <div>
-      <p>Topics</p>
-      <form onSubmit={onSubmit}>
-        <div>
-          Write a new topic: <input
-            value={newTopicContent}
-            onChange={handleTopicChange}
-          />
-        </div>
-        <button type="submit">Save</button>
-      </form>
-      <ul>
-        {props.topics.map((topic, index) =>
-          <li key={index}>
-            <Link to={`/topics/${index}`}>{topic.content}</Link>
-          </li>
-        )}
-      </ul>
+      <SubContainer>
+        <H2>Topics</H2>
+        <Form onSubmit={onSubmit}>
+          <InputRow>
+            Write a new topic: <Input value={newTopicContent} onChange={handleTopicChange}/>
+          </InputRow>
+          <ButtonRow>
+            <Button type="submit">Save</Button>
+          </ButtonRow>
+        </Form>
+      </SubContainer>
+      <TableContainer>
+        <Table>
+          <TBody>
+            <Tr>
+              <Th>Creator</Th>
+              <Th>Topic</Th>
+              <Th>Messages</Th>
+            </Tr>
+            {topics.map((topic, index) =>
+              <Tr key={index}>
+                <Td>
+                  {topic.creator}
+                </Td>
+                <Td>
+                  <Link to={`/topics/${index}`}>{topic.content}</Link>
+                </Td>
+              </Tr>
+            )}
+          </TBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import React, { useState } from "react"
 import Topics from "./Topics"
-import { Link } from "react-router-dom"
 import { OpenTopic } from "../types"
+import {
+  H2, WelcomeContainer, LinkRow, Button, ButtonRow, SubContainer
+} from "../styles/styles"
 
 interface Props {
   currentUser: boolean,
@@ -20,14 +22,20 @@ const Home = ({ currentUser, onLogout, topics, addNewTopic }: Props) => {
     <div>
       {currentUser?
         <>
-          <button onClick={onLogoutClick}>Logout</button>
+          <SubContainer>
+            <ButtonRow>
+              <Button onClick={onLogoutClick}>Logout</Button>
+            </ButtonRow>
+          </SubContainer>
           <Topics topics={topics} addNewTopic={addNewTopic}/>
         </>
         :
         <>
-          <Link to="/login">Login</Link>
-          <br/>
-          <Link to="/register">Register</Link>
+          <WelcomeContainer>
+            <H2>Welcome to discuss</H2>
+            <LinkRow>Login to your account: <a href="/login"><Button>Login</Button></a></LinkRow>
+            <LinkRow>Create a new account: <a href="/register"><Button>Register</Button></a></LinkRow>
+          </WelcomeContainer>
         </>
       }
 

@@ -3,17 +3,18 @@ import javax.validation.constraints.NotBlank;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Topic")
+@Table(name = "topic")
 public class Topic {
-    @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
 
-    //@Column(name = "creator")
-    @NotBlank
+    @Id
+    @SequenceGenerator(name="topic_id_seq", sequenceName = "topic_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "topic_id_seq")
+    @Column(name = "id", updatable = false)
+    private Long id;
+
+    @Column(name = "creator")
     private String creator;
 
-    /*
     @Column(name = "content")
     private String content;
 
@@ -25,30 +26,31 @@ public class Topic {
         this.content = content;
     }
 
-    public long getId() {
+    /*
+    public void setId(Long id) {
+        this.id = id;
+    }
+    @Id
+    public Long getId() {
         return id;
     }
+    */
 
-    public String getCreator() {
+    public void setCreator(String creator){
+        this.creator = creator;
+    }
+    @NotBlank
+    public String getCreator(){
         return creator;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setContent(String content){
+        this.content = content;
     }
-
-    public String getContent() {
+    @NotBlank
+    public String getContent(){
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    @Override
-    public String toString() {
-        return "Topic [id=" + id + ", creator=" + creator + ", content=" + content + "]";
-    }
-    */
 
 }

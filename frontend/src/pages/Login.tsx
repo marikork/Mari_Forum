@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { User } from "../types"
+import {
+  H2, SubContainer, Form, InputRow, ButtonRow, Button, Input
+} from "../styles/styles"
 
 interface Props {
   onLogin: () => void
@@ -28,18 +31,20 @@ const Login = ({ onLogin }: Props) => {
 
   return(
     <div>
-      <p>Login</p>
-      <form onSubmit={onSubmit}>
-        <div>
-          username: <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}/>
-        </div>
-        <div>
-          password: <input type='password' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <br/>
-      <button onClick={onCancel}>Cancel</button>
+      <SubContainer>
+        <H2>Login</H2>
+        <Form onSubmit={onSubmit}>
+          <InputRow>
+            username: <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}/>
+          </InputRow>
+          <InputRow>
+            password: <Input type='password' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
+          </InputRow>
+          <ButtonRow>
+            <Button onClick={onCancel}>Cancel</Button><Button type="submit">Login</Button>
+          </ButtonRow>
+        </Form>
+      </SubContainer>
     </div>
   )
 }
