@@ -1,28 +1,33 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { User } from "../types"
+import LoginService from "../services/LoginService"
 import {
   H2, SubContainer, Form, InputRow, ButtonRow, Button, Input
 } from "../styles/styles"
 
-interface Props {
-  onLogin: () => void
-}
-const Login = ({ onLogin }: Props) => {
+const Login = () => {
   const navigate = useNavigate()
   const [userName, setUserName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if(userName){
-      console.log(userName)
-    }
 
-    //const userName = event.currentTarget.elements[0].toString()
-    onLogin()
-    localStorage.setItem("user", userName)
-    navigate("/")
+    if(userName && password){
+      console.log(userName)
+
+      try{
+        LoginService.loginUser(userName, password)
+          .then((response) => {
+            localStorage.setItem("user", userName)
+            localStorage.setItem("token", response.data)
+            navigate("/")
+          })
+      }catch(error){
+        console.log(error)
+        window.alert(error)
+      }
+    }
   }
 
   const onCancel = () => {

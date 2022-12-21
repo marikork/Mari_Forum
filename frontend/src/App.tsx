@@ -15,16 +15,7 @@ import {
 } from "./styles/styles"
 
 const App = () => {
-  const [userLoggedIn, setUserLoggedIn] = useState(false)
   const [topics, setTopics] =useState<OpenTopic[]>([])
-
-  const login = () => {
-    setUserLoggedIn(true)
-  }
-
-  const logout = () => {
-    setUserLoggedIn(false)
-  }
 
   const addNewTopic = (topic:OpenTopic) => {
     setTopics(prevTopics => [...prevTopics, topic])
@@ -45,11 +36,11 @@ const App = () => {
         <H1>Our Forum</H1>
         <Hr/>
         <Routes>
-          <Route path="/login" element={<Login onLogin={login}/>}/>
+          <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register />}/>
-          <Route path="/topics" element={<Topics topics={topics} addNewTopic={addNewTopic}/>}/>
+          <Route path="/topics" element={<Topics/>}/>
           <Route path="topics/:id" element={<Topic/>}/>
-          <Route path="/" element={<Home currentUser={userLoggedIn} onLogout={logout} topics={topics} addNewTopic={addNewTopic}/>}/>
+          <Route path="/" element={<Home/>}/>
         </Routes>
 
       </div>

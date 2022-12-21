@@ -1,33 +1,45 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Topics from "./Topics"
-import { OpenTopic } from "../types"
+import LoginService from "../services/LoginService"
 import {
   H2, WelcomeContainer, LinkRow, Button, ButtonRow, SubContainer
 } from "../styles/styles"
 
-interface Props {
-  currentUser: boolean,
-  onLogout: () => void,
-  topics: OpenTopic[],
-  addNewTopic: (topic: OpenTopic) => void
-}
+const Home = () => {
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
 
-const Home = ({ currentUser, onLogout, topics, addNewTopic }: Props) => {
+  useEffect(() => {
+    if(localStorage.getItem("user")){
+      setUserLoggedIn(true)
+    }
+  }, [])
 
   const onLogoutClick = () => {
-    onLogout()
+    /*
+    const user:string|null = localStorage.getItem("user")
+    const token:string|null = localStorage.getItem("token")
+
+    if(user && token){
+      LoginService.logoutUser(token)
+    }
+    */
     localStorage.setItem("user", "")
+    localStorage.removeItem("user")
+    localStorage.setItem("token", "")
+    localStorage.removeItem("token")
+    setUserLoggedIn(false)
   }
+
   return(
     <div>
-      {currentUser?
+      {userLoggedIn?
         <>
           <SubContainer>
             <ButtonRow>
               <Button onClick={onLogoutClick}>Logout</Button>
             </ButtonRow>
           </SubContainer>
-          <Topics topics={topics} addNewTopic={addNewTopic}/>
+          <Topics/>
         </>
         :
         <>

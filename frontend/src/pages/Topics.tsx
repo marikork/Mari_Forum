@@ -6,12 +6,7 @@ import {
   H2, SubContainer, Form, InputRow, ButtonRow, Button, Input, Table, TBody, Tr, Th, Td, TableContainer
 } from "../styles/styles"
 
-interface Props {
-  topics: OpenTopic[],
-  addNewTopic: (topic: OpenTopic) => void
-}
-
-const Topics = (props: Props) => {
+const Topics = () => {
   const [newTopicContent, setNewTopicContent] = useState("")
   const [topics, setTopics] = useState<OpenTopic[]>([])
 
@@ -33,7 +28,8 @@ const Topics = (props: Props) => {
     if(user){
       const newTopic: OpenTopic = {
         creator: user,
-        content: newTopicContent
+        content: newTopicContent,
+        messages: 0
       }
       //props.addNewTopic(newTopic)
       console.log(newTopic)
@@ -79,6 +75,9 @@ const Topics = (props: Props) => {
                 </Td>
                 <Td>
                   <Link to={`/topics/${index}`}>{topic.content}</Link>
+                </Td>
+                <Td>
+                  {topic.messages}
                 </Td>
               </Tr>
             )}

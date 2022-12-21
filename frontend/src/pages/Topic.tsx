@@ -4,26 +4,19 @@ import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import TopicService from "../services/TopicService"
 import {
-  H2, SubContainer, Form, TextRow, ButtonRow, Button, Input, MessageRow, ContentRow, Table, TBody, Tr, Th, Td, MessagesTableContainer
+  SubContainer, Form, TextRow, ButtonRow, Button, Input, MessageRow, ContentRow, Table, TBody, Tr, Td, MessagesTableContainer
 } from "../styles/styles"
-
-//interface Props {
-//  topics: OpenTopic[]
-//}
 
 const Topic = () => {
   const { id } =useParams()
   const [topic, setTopic] = useState<OpenTopic>()
   const navigate = useNavigate()
   const [newMessageContent, setNewMessageContent] = useState("")
-  const [Messages, setMessages] = useState<Message[]>([{ writer:"user1", message:"message here" }, { writer: "user2", message: "some message here" }])
+  const [messages, setMessages] = useState<Message[]>([])
 
   useEffect (() => {
-    //let num: number
-    //if(id){
-    //  num=parseInt(id)
-    //}
     getTopic()
+    getMessages()
   }, [])
 
   const getTopic = async() => {
@@ -32,11 +25,21 @@ const Topic = () => {
     if(id){
       TopicService.getTopic(idToNumber)
         .then(response => {
-          console.log(response.data)
           setTopic(response.data)
         })
     }
+  }
 
+  const getMessages = async() => {
+    let idToNumber = Number(id)
+    idToNumber++
+    if(id){
+      TopicService.getMessages(idToNumber)
+        .then(response => {
+          console.log(response.data)
+          setMessages(response.data)
+        })
+    }
   }
 
   const onBack = () => {
@@ -46,21 +49,20 @@ const Topic = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const user = localStorage.getItem("user")
-    /*
+    let idToNumber = Number(id)
+    idToNumber++
     if(user){
-      const newTopic: OpenTopic = {
-        creator: user,
-        content: newMessageContent
+      const newMessage: Message = {
+        writer: user,
+        message: newMessageContent,
+        topic: null
       }
-      //props.addNewTopic(newTopic)
-      console.log(newTopic)
-      TopicService.createTopic(newTopic)
+      TopicService.createMessage(idToNumber, newMessage)
         .then((response) => {
           console.log(response.data)
-          getAllTopics()
+          getMessages()
         })
-    }*/
-
+    }
     setNewMessageContent("")
   }
 
@@ -80,16 +82,18 @@ const Topic = () => {
           <MessagesTableContainer>
             <Table>
               <TBody>
-                {Messages.map((message, index) =>
-                  <Tr key={index}>
-                    <Td>
-                      {message.writer}:
-                    </Td>
-                    <Td>
-                      {message.message}
-                    </Td>
-                  </Tr>
-                )}
+                {messages?
+                  messages.map((message, index) =>
+                    <Tr key={index}>
+                      <Td>
+                        {message.writer}:
+                      </Td>
+                      <Td>
+                        {message.message}
+                      </Td>
+                    </Tr>
+                  ):""
+                }
               </TBody>
             </Table>
           </MessagesTableContainer>

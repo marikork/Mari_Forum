@@ -1,9 +1,17 @@
 package com.myforum.myforum.models;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+//import jakarta.persistence.*;
 
 @Entity
 @Table(name = "topic")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Topic {
 
     @Id
@@ -17,6 +25,12 @@ public class Topic {
 
     @Column(name = "content")
     private String content;
+
+    @OneToMany( mappedBy = "topic")
+    //@JoinColumn(name="id")
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @OrderColumn(name = "id")
+    private List<Message> messages;
 
     public Topic() {
 
@@ -50,6 +64,18 @@ public class Topic {
     @NotBlank
     public String getContent(){
         return content;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    /*
+        public int getMessages() {
+            return messages.size();
+        }*/
+    public List<Message> getMessages(){
+        return messages;
     }
 
 

@@ -1,13 +1,11 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
 import {
   H2, SubContainer, Form, InputRow, ButtonRow, Button, Input
 } from "../styles/styles"
 
 const Register = () => {
-  const [firstName, setFirstName] = useState<string>("")
-  const [lastName, setLastName] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
   const [userName, setUserName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const navigate = useNavigate()
@@ -19,8 +17,7 @@ const Register = () => {
     try{
       if ( userName !== "" &&
             password !== "" &&
-            firstName !== "" &&
-            lastName !== ""
+            email !== ""
       ) {
         console.log("on kaikki")
       }
@@ -42,10 +39,7 @@ const Register = () => {
       <H2>Register</H2>
       <Form onSubmit={onSubmit}>
         <InputRow>
-          first name: <Input type="text" name="firstName" id="firstName" placeholder="Your First Name" onChange={event => setFirstName(event.target.value)}/>
-        </InputRow>
-        <InputRow>
-          last name: <Input type="text" name="lastName" id="lastName" placeholder="Your Last Name" onChange={event => setLastName(event.target.value)}/>
+          email:   <Input type="text" name="email" id="email" placeholder="Your Email" onChange={event => setEmail(event.target.value)}/>
         </InputRow>
         <InputRow>
           username: <Input type="text" name="userName" id="userName" placeholder="Your Username" onChange={event => setUserName(event.target.value)}/>
