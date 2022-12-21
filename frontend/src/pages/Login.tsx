@@ -21,11 +21,12 @@ const Login = () => {
           .then((response) => {
             localStorage.setItem("user", userName)
             localStorage.setItem("token", response.data)
+            const currentTime = new Date()
+            localStorage.setItem("timeTokenCreated", currentTime.toString())
             navigate("/")
           })
       }catch(error){
         console.log(error)
-        window.alert(error)
       }
     }
   }

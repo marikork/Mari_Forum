@@ -9,24 +9,37 @@ const Home = () => {
   const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
 
   useEffect(() => {
-    if(localStorage.getItem("user")){
-      setUserLoggedIn(true)
+    if(localStorage.getItem("user") && localStorage.getItem("token") && localStorage.getItem("timeTokenCreated")){
+      const tokenCreated = localStorage.getItem("timeTokenCreated")
+      if(tokenCreated){
+        const timeTokenCreated = new Date(tokenCreated)
+        const timeNow = new Date()
+        const tokenExpirationTime = timeTokenCreated.setMilliseconds(timeTokenCreated.getMilliseconds() + 99990)
+        const tokenExpirationTimeAsDate = new Date()
+        tokenExpirationTimeAsDate.setTime(tokenExpirationTime)
+        if(timeNow > tokenExpirationTimeAsDate){
+          localStorage.setItem("user", "")
+          localStorage.removeItem("user")
+          localStorage.setItem("token", "")
+          localStorage.removeItem("token")
+          localStorage.setItem("timeTokenCreated", "")
+          localStorage.removeItem("timeTokenCreated")
+        }else{
+          setUserLoggedIn(true)
+        }
+      }
+
     }
   }, [])
 
   const onLogoutClick = () => {
-    /*
-    const user:string|null = localStorage.getItem("user")
-    const token:string|null = localStorage.getItem("token")
 
-    if(user && token){
-      LoginService.logoutUser(token)
-    }
-    */
     localStorage.setItem("user", "")
     localStorage.removeItem("user")
     localStorage.setItem("token", "")
     localStorage.removeItem("token")
+    localStorage.setItem("timeTokenCreated", "")
+    localStorage.removeItem("timeTokenCreated")
     setUserLoggedIn(false)
   }
 

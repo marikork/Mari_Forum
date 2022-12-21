@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+//@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -27,6 +28,21 @@ public class AuthenticationController {
     private final UserDao userDao;
     private final JwtUtils jwtUtils;
 
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticate(
+            @RequestBody AuthenticationRequest request) {
+        System.out.println("loginin alussa");
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        System.out.println("authenticationManagerin kutsun jälkeen");
+        final UserDetails user = userDao.findUserByEmail(request.getEmail());
+        if (user != null) {
+            return ResponseEntity.ok(jwtUtils.generateToken(user));
+        }
+
+        return ResponseEntity.status(400).body("Some error has occurred");
+    }
     /*
     @PostMapping("/login")
     public ResponseEntity<String> authenticate(
@@ -52,6 +68,7 @@ public class AuthenticationController {
 
     }
      */
+    /*
     @PostMapping("/login")
     public ResponseEntity<String> authenticate(
             @RequestBody AuthenticationRequest request
@@ -77,7 +94,8 @@ public class AuthenticationController {
         }
 
         return ResponseEntity.status(400).body("Some error has occurred");
-    }
+    }*/
+
 
     @PostMapping("/logout")
     public void logout(

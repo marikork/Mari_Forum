@@ -13,6 +13,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -28,12 +29,25 @@ public class JwtAuthFilter extends OncePerRequestFilter{
     private final UserDao userDao;
     private final JwtUtils jwtUtils;
 
+    public String readAllLines(BufferedReader reader) throws IOException {
+        StringBuilder content = new StringBuilder();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            content.append(line);
+            content.append(System.lineSeparator());
+        }
+
+        return content.toString();
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(request.getHeaderNames());
+        System.out.println("do filter internal");
+        request.getHeaderNames();
         final String authHeader = request.getHeader(AUTHORIZATION);
         final String userEmail;
         final String jwtToken;
@@ -51,6 +65,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDao.findUserByEmail(userEmail);
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
+                System.out.println("token is valid");
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

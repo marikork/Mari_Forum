@@ -14,9 +14,9 @@ public class JwtUtils {
     private String SECRET_KEY = "secret";
 
     public String extractUsername(String token) {
-        System.out.println(token);
-        Claims claims = extractAllClaims(token);
-        System.out.println(claims.getSubject());
+        //System.out.println(token);
+        //Claims claims = extractAllClaims(token);
+        //System.out.println(claims.getSubject());
         return extractClaim(token, Claims::getSubject); // we set subject in creatToken setSubject(userDetails.getUsername
     }
 
@@ -41,13 +41,14 @@ public class JwtUtils {
         return createToken(claims, userDetails);
     }
 
+    private int millisecs = 99290; //1000 * 60 * 60 * 10;
     private String createToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .claim("authorities", userDetails.getAuthorities())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + millisecs))//1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 

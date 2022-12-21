@@ -3,6 +3,7 @@ package com.myforum.myforum.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.myforum.myforum.dao.UserDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -93,8 +95,8 @@ public class SecurityConfig
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // don't encrypt
-        //return new BCryptPasswordEncoder();
+        //return NoOpPasswordEncoder.getInstance(); // don't encrypt
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -102,6 +104,7 @@ public class SecurityConfig
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+                System.out.println("user detail service");
                 return userDao.findUserByEmail(email);
             }
         };
