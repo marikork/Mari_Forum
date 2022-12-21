@@ -1,4 +1,5 @@
 package com.myforum.myforum.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -26,10 +27,12 @@ public class Topic {
     @Column(name = "content")
     private String content;
 
+
     @OneToMany( mappedBy = "topic")
     //@JoinColumn(name="id")
     @LazyCollection(LazyCollectionOption.EXTRA)
-    @OrderColumn(name = "id")
+    //@OrderColumn(name = "topic_id")
+    @JsonIgnore
     private List<Message> messages;
 
     public Topic() {
@@ -44,11 +47,13 @@ public class Topic {
     public void setId(Long id) {
         this.id = id;
     }
+
     @Id
     public Long getId() {
         return id;
     }
     */
+
 
     public void setCreator(String creator){
         this.creator = creator;
@@ -66,6 +71,7 @@ public class Topic {
         return content;
     }
 
+
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
@@ -74,9 +80,12 @@ public class Topic {
         public int getMessages() {
             return messages.size();
         }*/
+
     public List<Message> getMessages(){
         return messages;
     }
+
+
 
 
 }
