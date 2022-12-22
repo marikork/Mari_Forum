@@ -29,9 +29,8 @@ const Topics = () => {
       const newTopic: OpenTopic = {
         creator: user,
         content: newTopicContent,
-        messages: 0
+        messages: []
       }
-      //props.addNewTopic(newTopic)
       console.log(newTopic)
       TopicService.createTopic(newTopic)
         .then((response) => {
@@ -77,7 +76,7 @@ const Topics = () => {
                   <Link to={`/topics/${index}`}>{topic.content}</Link>
                 </Td>
                 <Td>
-                  {topic.messages}
+                  {topic.messages.length}
                 </Td>
               </Tr>
             )}

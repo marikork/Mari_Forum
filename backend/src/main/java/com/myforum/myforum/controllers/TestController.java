@@ -38,17 +38,8 @@ public class TestController {
     @PostMapping("/topics")
     public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) {
         try {
-            Topic _topic = topicRepository
-                    .save(new Topic(topic.getCreator(), topic.getContent()));
+            Topic _topic = topicRepository.save(topic);
             return new ResponseEntity<>(_topic, HttpStatus.CREATED);
-            /*
-            Topic _topic = new Topic(topic.getCreator(), topic.getContent());
-            System.out.println(_topic.getCreator());
-            System.out.println(_topic.getContent());
-            System.out.println(_topic.getId());
-            topicRepository.save(_topic);
-            return new ResponseEntity<>(_topic, HttpStatus.CREATED);
-            */
         } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -73,7 +64,7 @@ public class TestController {
                                                      Long topicId, @RequestBody Message messageRequest) {
 
         Message message = topicRepository.findById(topicId).map(topic -> {
-            messageRequest.setTopic(topic);
+            messageRequest.setTopicId(topicId);
             return messageRepository.save(messageRequest);
         }).orElseThrow(() -> new Error("Not found topic with id = " + topicId));
 

@@ -3,6 +3,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,9 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 //import jakarta.persistence.*;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "topic")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Topic {
 
     @Id
@@ -27,65 +34,11 @@ public class Topic {
     @Column(name = "content")
     private String content;
 
-
-    @OneToMany( mappedBy = "topic")
-    //@JoinColumn(name="id")
-    @LazyCollection(LazyCollectionOption.EXTRA)
-    //@OrderColumn(name = "topic_id")
-    @JsonIgnore
+    @OneToMany(targetEntity = Message.class, cascade = CascadeType.ALL)
+    // name = topic_id (kannassa Message -taulun topic_id, johon viitataan)
+    // referencedColumnName = "id" tämän pojon id
+    @JoinColumn(name="topic_id", referencedColumnName = "id")
     private List<Message> messages;
 
-    public Topic() {
-
-    }
-    public Topic(String creator, String content) {
-        this.creator = creator;
-        this.content = content;
-    }
-
-    /*
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Id
-    public Long getId() {
-        return id;
-    }
-    */
-
-
-    public void setCreator(String creator){
-        this.creator = creator;
-    }
-    @NotBlank
-    public String getCreator(){
-        return creator;
-    }
-
-    public void setContent(String content){
-        this.content = content;
-    }
-    @NotBlank
-    public String getContent(){
-        return content;
-    }
-
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    /*
-        public int getMessages() {
-            return messages.size();
-        }*/
-
-    public List<Message> getMessages(){
-        return messages;
-    }
-
-
-
-
+    
 }
