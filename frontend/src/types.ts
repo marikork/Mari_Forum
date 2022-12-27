@@ -9,7 +9,8 @@ export type Message = {
     id?: any | null,
     topic: OpenTopic | null,
     writer: string,
-    message: string
+    message: string,
+    timeCreated: Date
 }
 
 export type OpenTopic = {
@@ -18,4 +19,14 @@ export type OpenTopic = {
     creator: string,
     content: string,
     messages: Message[]
+}
+
+export type TopicWithTime = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    id?: any | null,
+    creator: string,
+    content: string,
+    messages: Message[],
+    time: Date | null,
+    timeToCompare: Date
 }

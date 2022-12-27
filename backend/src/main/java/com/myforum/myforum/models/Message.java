@@ -6,6 +6,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import com.myforum.myforum.models.Topic;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -29,5 +30,8 @@ public class Message {
 
     @Column(name = "topic_id")
     private Long topicId;
+
+    @Column(name = "time_created")
+    private LocalDateTime timeCreated;
     
 }

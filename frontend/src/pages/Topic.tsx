@@ -36,8 +36,20 @@ const Topic = () => {
     if(id){
       TopicService.getMessages(idToNumber)
         .then(response => {
-          console.log(response.data)
-          setMessages(response.data)
+          //console.log(response.data)
+          const arrFromDB = response.data
+          arrFromDB.sort((a,b) => {
+            return new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime()
+          })
+          //setMessages(response.data)
+          arrFromDB.map((message) => {
+            const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours() + 2)
+            //const hours=new Date(message.timeCreated).getHours() + 2
+            message.timeCreated = new Date(datetime)
+            //console.log(datetime)
+          })
+          //console.log(arrFromDB)
+          setMessages(arrFromDB)
         })
     }
   }
@@ -51,11 +63,13 @@ const Topic = () => {
     const user = localStorage.getItem("user")
     let idToNumber = Number(id)
     idToNumber++
+    const time = new Date()
     if(user){
       const newMessage: Message = {
         writer: user,
         message: newMessageContent,
-        topic: null
+        topic: null,
+        timeCreated: time
       }
       TopicService.createMessage(idToNumber, newMessage)
         .then((response) => {
@@ -68,6 +82,11 @@ const Topic = () => {
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessageContent(e.currentTarget.value)
+  }
+
+  const onUpdate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    console.log("update clicked", e.target)
   }
 
   return(
@@ -90,6 +109,12 @@ const Topic = () => {
                       </Td>
                       <Td>
                         {message.message}
+                      </Td>
+                      <Td>
+                        {message.timeCreated.toLocaleString()}
+                      </Td>
+                      <Td>
+                        <Button value={index} onClick={e => onUpdate(e)}>Update</Button>
                       </Td>
                     </Tr>
                   ):""
