@@ -1,4 +1,4 @@
-import { OpenTopic, Message } from "../types"
+import { OpenTopic, Message, MessageWithTopicId } from "../types"
 import axios from "axios"
 const api = axios.create({
   baseURL: "http://localhost:8080/"
@@ -20,8 +20,12 @@ const createTopic = (data: OpenTopic) => {
   return api.post<OpenTopic>("/topics", data)
 }
 
-const createMessage = (id: number, data: Message) => {//id: any, data: Message) => {
-  return api.post<Message>(`/topics/${id}/messages`, data)//, data)
+const createMessage = (id: number, data: Message) => {
+  return api.post<Message>(`/topics/${id}/messages`, data)
+}
+
+const updateMessages = (id: number, data: MessageWithTopicId) => {
+  return api.put<Message>(`/messages/${id}`, data)
 }
 
 const TopicService = {
@@ -29,7 +33,8 @@ const TopicService = {
   getTopic,
   createTopic,
   getMessages,
-  createMessage
+  createMessage,
+  updateMessages
 }
 
 export default TopicService

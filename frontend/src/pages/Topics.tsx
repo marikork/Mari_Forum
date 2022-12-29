@@ -63,7 +63,7 @@ const Topics = () => {
         }
         //console.log(topicWithTime)
         topicsTimed.push(topicWithTime)
-        console.log(topicsTimed)
+        //console.log(topicsTimed)
       })
     }
     topicsTimed.sort((a,b) => {

@@ -9,27 +9,13 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Topics from "./pages/Topics"
 import Topic from "./pages/Topic"
-import { User, OpenTopic } from "./types"
 import {
   Container, Hr, H1
 } from "./styles/styles"
+import UpdateMessage from "./pages/UpdateMessage"
 
 const App = () => {
-  const [topics, setTopics] =useState<OpenTopic[]>([])
 
-  const addNewTopic = (topic:OpenTopic) => {
-    setTopics(prevTopics => [...prevTopics, topic])
-  }
-
-  useEffect(() => {
-    /*
-    fetch("http://localhost:8080/hello")
-      .then(res => res.json())
-      .then(data => console.log(data))
-      */
-  }
-
-  )
   return (
     <Container>
       <div className="App">
@@ -40,6 +26,7 @@ const App = () => {
           <Route path="/register" element={<Register />}/>
           <Route path="/topics" element={<Topics/>}/>
           <Route path="topics/:id" element={<Topic/>}/>
+          <Route path="topics/:id/:index" element={<UpdateMessage/>}/>
           <Route path="/" element={<Home/>}/>
         </Routes>
 

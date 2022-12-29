@@ -50,11 +50,11 @@ public class TestController {
     public ResponseEntity<List<Message>> getAllMessagesByTopicId(@PathVariable(value = "id") Long topicId) {
 
         if (!topicRepository.existsById(topicId)) {
-            throw new Error("Not found Tutorial with id = " + topicId);
+            throw new Error("Not found Topic with id = " + topicId);
         }
 
         List<Message> messages = messageRepository.findByTopicId(topicId);
-        System.out.println(messages);
+        //System.out.println(messages);
         //return new ResponseEntity<>(messages, HttpStatus.OK);
         return ResponseEntity.ok().body(messages);
     }
@@ -70,5 +70,28 @@ public class TestController {
 
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @PutMapping("messages/{id}")
+    public ResponseEntity<Message> updateMessages(@PathVariable(value = "id")
+                                                     Long messageId, @RequestBody Message messageRequest) {
+
+        Message message = messageRepository.findById(messageId).get();
+        message.setMessage(messageRequest.getMessage());
+        message.setTimeCreated(message.getTimeCreated());
+        message.setWriter(message.getWriter());
+        
+        if(message != null){
+            try {
+                Message _message = messageRepository.save(message);
+                return new ResponseEntity<Message>(_message, HttpStatus.OK);
+            } catch (Exception e) {
+                System.out.println(e);
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return null;
+    }
+
 
 }

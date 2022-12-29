@@ -13,6 +13,15 @@ export type Message = {
     timeCreated: Date
 }
 
+export type MessageWithTopicId = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    id?: any | null,
+    topic: number,
+    writer: string,
+    message: string,
+    timeCreated: Date
+}
+
 export type OpenTopic = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     id?: any | null,

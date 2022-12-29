@@ -36,19 +36,14 @@ const Topic = () => {
     if(id){
       TopicService.getMessages(idToNumber)
         .then(response => {
-          //console.log(response.data)
           const arrFromDB = response.data
           arrFromDB.sort((a,b) => {
             return new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime()
           })
-          //setMessages(response.data)
           arrFromDB.map((message) => {
             const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours() + 2)
-            //const hours=new Date(message.timeCreated).getHours() + 2
             message.timeCreated = new Date(datetime)
-            //console.log(datetime)
           })
-          //console.log(arrFromDB)
           setMessages(arrFromDB)
         })
     }
@@ -84,11 +79,6 @@ const Topic = () => {
     setNewMessageContent(e.currentTarget.value)
   }
 
-  const onUpdate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault()
-    console.log("update clicked", e.target)
-  }
-
   return(
     <SubContainer>
       <ButtonRow>
@@ -101,7 +91,7 @@ const Topic = () => {
           <MessagesTableContainer>
             <Table>
               <TBody>
-                {messages?
+                {messages&&topic?
                   messages.map((message, index) =>
                     <Tr key={index}>
                       <Td>
@@ -114,10 +104,10 @@ const Topic = () => {
                         {message.timeCreated.toLocaleString()}
                       </Td>
                       <Td>
-                        <Button value={index} onClick={e => onUpdate(e)}>Update</Button>
+                        <Button value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</Button>
                       </Td>
                     </Tr>
-                  ):""
+                  ):<></>
                 }
               </TBody>
             </Table>

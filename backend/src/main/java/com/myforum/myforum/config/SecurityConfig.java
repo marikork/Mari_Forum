@@ -148,7 +148,7 @@ public class SecurityConfig
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST","PUT"));
         //corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
         // CorsConfiguration configuration = new CorsConfiguration();
