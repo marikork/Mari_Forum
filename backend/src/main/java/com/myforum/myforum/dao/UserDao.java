@@ -38,6 +38,11 @@ public class UserDao {
                         "user1",
                         passwordEncoder.encode("password"),
                         Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
+                ),
+                new User(
+                        "user2",
+                        passwordEncoder.encode("password"),
+                        Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
                 )
         );
 

@@ -28,13 +28,19 @@ const updateMessages = (id: number, data: MessageWithTopicId) => {
   return api.put<Message>(`/messages/${id}`, data)
 }
 
+const deleteTopic = (id: any) => {
+  console.log("deleteTopicissa ", id, typeof(id))
+  return api.delete(`/topics/${id}`)
+}
+
 const TopicService = {
   getTopics,
   getTopic,
   createTopic,
   getMessages,
   createMessage,
-  updateMessages
+  updateMessages,
+  deleteTopic
 }
 
 export default TopicService

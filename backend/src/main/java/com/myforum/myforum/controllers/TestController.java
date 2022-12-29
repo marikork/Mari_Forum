@@ -93,5 +93,16 @@ public class TestController {
         return null;
     }
 
+    @DeleteMapping("/topics/{id}")
+	public ResponseEntity<HttpStatus> deleteTopic(@PathVariable("id") long id) {
+        System.out.println(id);
+		try {
+			topicRepository.deleteById(id);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 
 }

@@ -98,6 +98,15 @@ const Topics = () => {
     setNewTopicContent(e.currentTarget.value)
   }
 
+  const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    console.log("deletessä, ",e.currentTarget.value)
+    TopicService.deleteTopic(e.currentTarget.value)
+      .then((response) => {
+        getAllTopics()
+      })
+  }
+
   return(
     <div>
       <SubContainer>
@@ -133,6 +142,9 @@ const Topics = () => {
                 </Td>
                 <Td>
                   {topic.time? topic.time.toLocaleString() : ""}
+                </Td>
+                <Td>
+                  <Button value={topic.id} onClick={(e) => onDelete(e)}>Delete</Button>
                 </Td>
               </Tr>
             )}

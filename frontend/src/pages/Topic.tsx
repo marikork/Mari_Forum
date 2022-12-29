@@ -13,10 +13,15 @@ const Topic = () => {
   const navigate = useNavigate()
   const [newMessageContent, setNewMessageContent] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
+  const [user, setUser] = useState("")
 
   useEffect (() => {
     getTopic()
     getMessages()
+    const currentUser = localStorage.getItem("user")
+    if(currentUser){
+      setUser(currentUser)
+    }
   }, [])
 
   const getTopic = async() => {
@@ -103,9 +108,11 @@ const Topic = () => {
                       <Td>
                         {message.timeCreated.toLocaleString()}
                       </Td>
-                      <Td>
-                        <Button value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</Button>
-                      </Td>
+                      {user===message.writer?
+                        <Td>
+                          <Button value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</Button>
+                        </Td>
+                        :<></>}
                     </Tr>
                   ):<></>
                 }
@@ -127,3 +134,26 @@ const Topic = () => {
 }
 
 export default Topic
+/*<Table>
+              <TBody>
+                {messages&&topic?
+                  messages.map((message, index) =>
+                    <Tr key={index}>
+                      <Td>
+                        {message.writer}:
+                      </Td>
+                      <Td>
+                        {message.message}
+                      </Td>
+                      <Td>
+                        {message.timeCreated.toLocaleString()}
+                      </Td>
+                      <Td>
+                        <Button value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</Button>
+                      </Td>
+                    </Tr>
+                  ):<></>
+                }
+              </TBody>
+            </Table>
+            */
