@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { OpenTopic, TopicWithTime } from "../types"
 import TopicService from "../services/TopicService"
+import { useNavigate } from "react-router-dom"
 import {
   H2, SubContainer, Form, InputRow, ButtonRow, Button, Input, Table, TBody, Tr, Th, Td, TableContainer
 } from "../styles/styles"
@@ -10,6 +11,7 @@ const Topics = () => {
   const [newTopicContent, setNewTopicContent] = useState("")
   const [topics, setTopics] = useState<OpenTopic[]>([])
   const [topicsWithTime, setTopicsWithTime] = useState<TopicWithTime[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     getAllTopics()
@@ -146,6 +148,12 @@ const Topics = () => {
                 <Td>
                   <Button value={topic.id} onClick={(e) => onDelete(e)}>Delete</Button>
                 </Td>
+                {topic.messages.length===0?
+                  <Td>
+                    <Button value={topic.id} onClick={() => navigate(`/topics/update/${topic.id - 1}`)}>Update</Button>
+                  </Td>
+                  :<></>
+                }
               </Tr>
             )}
           </TBody>

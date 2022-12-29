@@ -93,11 +93,33 @@ public class TestController {
         return null;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
+    @PutMapping("topics/{id}")
+    public ResponseEntity<Topic> updateTopic(@PathVariable(value = "id")
+                                                     Long topicId, @RequestBody Topic topicRequest) {
+
+        Topic topic = topicRepository.findById(topicId).get();
+        topic.setContent(topicRequest.getContent());
+        topic.setCreator(topicRequest.getCreator());
+        
+        if(topic != null){
+            try {
+                Topic _topic = topicRepository.save(topic);
+                return new ResponseEntity<Topic>(_topic, HttpStatus.OK);
+            } catch (Exception e) {
+                System.out.println(e);
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return null;
+    }
+
     @DeleteMapping("/topics/{id}")
 	public ResponseEntity<HttpStatus> deleteTopic(@PathVariable("id") long id) {
         System.out.println(id);
 		try {
 			topicRepository.deleteById(id);
+            messageRepository.deleteByTopicId(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

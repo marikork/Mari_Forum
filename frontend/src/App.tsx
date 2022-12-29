@@ -13,6 +13,7 @@ import {
   Container, Hr, H1
 } from "./styles/styles"
 import UpdateMessage from "./pages/UpdateMessage"
+import UpdateTopic from "./pages/UpdateTopic"
 
 const App = () => {
 
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/topics" element={<Topics/>}/>
           <Route path="topics/:id" element={<Topic/>}/>
           <Route path="topics/:id/:index" element={<UpdateMessage/>}/>
+          <Route path="topics/update/:id" element={<UpdateTopic/>}/>
           <Route path="/" element={<Home/>}/>
         </Routes>
 

@@ -96,7 +96,7 @@ const UpdateMessage = () => {
         <form onSubmit={onSubmit}>
           <input value={newMessage} onChange={handleMessageChange}/> <button onClick={onCancel}>Cancel</button><button type="submit">Save</button>
         </form>
-        : "ei oo"}
+        : <></>}
     </div>
   )
 }
