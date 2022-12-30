@@ -9,6 +9,7 @@ const UpdateTopic = () => {
   const [topic, setTopic] = useState<OpenTopic>()
   const navigate = useNavigate()
   const [newTopic, setNewTopic] = useState("")
+  const [cancelClicked, setCancelClicked] = useState(false)
 
   useEffect (() => {
     console.log("UpdateTopicissa id on ", id)
@@ -34,21 +35,25 @@ const UpdateTopic = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const user = localStorage.getItem("user")
-    const time = new Date()
-    const messages : Message[] = []
-    if(user&&newTopic){
-      const newTopicToUpdate: OpenTopic = {
-        id: topic?.id,
-        creator: user,
-        content: newTopic,
-        messages: messages
+    if(cancelClicked && topic){
+      navigate(-1)
+    }else{
+      const user = localStorage.getItem("user")
+      const time = new Date()
+      const messages : Message[] = []
+      if(user && newTopic){
+        const newTopicToUpdate: OpenTopic = {
+          id: topic?.id,
+          creator: user,
+          content: newTopic,
+          messages: messages
+        }
+        //console.log(newMessageToUpdate)
+        TopicService.updateTopic(newTopicToUpdate?.id, newTopicToUpdate)
+          .then(() => {
+            navigate(-1)
+          })
       }
-      //console.log(newMessageToUpdate)
-      TopicService.updateTopic(newTopicToUpdate?.id, newTopicToUpdate)
-        .then(() => {
-          navigate(-1)
-        })
     }
   }
 
@@ -57,7 +62,7 @@ const UpdateTopic = () => {
   }
 
   const onCancel = () => {
-    navigate(-2)
+    setCancelClicked(true)
   }
 
   return(

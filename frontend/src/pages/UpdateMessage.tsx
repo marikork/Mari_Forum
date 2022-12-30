@@ -11,6 +11,7 @@ const UpdateMessage = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [messageToUpdate, setMessageToUpdate] = useState<Message>()
   const [newMessage, setNewMessage] = useState("")
+  const [cancelClicked, setCancelClicked] = useState(false)
 
   useEffect (() => {
     getTopic()
@@ -61,21 +62,24 @@ const UpdateMessage = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const user = localStorage.getItem("user")
-    const time = new Date()
-    if(user&&newMessage&&topic){
-      const newMessageToUpdate: MessageWithTopicId = {
-        id: messageToUpdate?.id,
-        writer: user,
-        message: newMessage,
-        topic: topic.id,
-        timeCreated: time
+    if(cancelClicked && topic){
+      navigate(`/topics/${topic.id - 1}`)
+    }else{
+      const user = localStorage.getItem("user")
+      const time = new Date()
+      if(user&&newMessage&&topic){
+        const newMessageToUpdate: MessageWithTopicId = {
+          id: messageToUpdate?.id,
+          writer: user,
+          message: newMessage,
+          topic: topic.id,
+          timeCreated: time
+        }
+        TopicService.updateMessages(messageToUpdate?.id, newMessageToUpdate)
+          .then(() => {
+            navigate(-1)
+          })
       }
-      //console.log(newMessageToUpdate)
-      TopicService.updateMessages(messageToUpdate?.id, newMessageToUpdate)
-        .then(() => {
-          navigate(-1)
-        })
     }
   }
 
@@ -84,7 +88,7 @@ const UpdateMessage = () => {
   }
 
   const onCancel = () => {
-    navigate(-1)
+    setCancelClicked(true)
   }
 
 
