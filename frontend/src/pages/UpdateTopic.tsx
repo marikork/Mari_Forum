@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { OpenTopic, Message, MessageWithTopicId } from "../types"
+import { OpenTopic, Message } from "../types"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import TopicService from "../services/TopicService"
@@ -12,7 +12,7 @@ const UpdateTopic = () => {
   const [cancelClicked, setCancelClicked] = useState(false)
 
   useEffect (() => {
-    console.log("UpdateTopicissa id on ", id)
+    //console.log("UpdateTopicissa id on ", id)
     getTopic()
   }, [])
 
@@ -39,7 +39,7 @@ const UpdateTopic = () => {
       navigate(-1)
     }else{
       const user = localStorage.getItem("user")
-      const time = new Date()
+      //const time = new Date()
       const messages : Message[] = []
       if(user && newTopic){
         const newTopicToUpdate: OpenTopic = {

@@ -134,26 +134,3 @@ const Topic = () => {
 }
 
 export default Topic
-/*<Table>
-              <TBody>
-                {messages&&topic?
-                  messages.map((message, index) =>
-                    <Tr key={index}>
-                      <Td>
-                        {message.writer}:
-                      </Td>
-                      <Td>
-                        {message.message}
-                      </Td>
-                      <Td>
-                        {message.timeCreated.toLocaleString()}
-                      </Td>
-                      <Td>
-                        <Button value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</Button>
-                      </Td>
-                    </Tr>
-                  ):<></>
-                }
-              </TBody>
-            </Table>
-            */

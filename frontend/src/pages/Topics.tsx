@@ -102,7 +102,7 @@ const Topics = () => {
 
   const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    console.log("deletessä, ",e.currentTarget.value)
+    //console.log("deletessä, ",e.currentTarget.value)
     TopicService.deleteTopic(e.currentTarget.value)
       .then((response) => {
         getAllTopics()
