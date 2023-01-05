@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react"
 import Topics from "./Topics"
-import LoginService from "../services/LoginService"
+import { useNavigate } from "react-router-dom"
 import {
-  H2, WelcomeContainer, LinkRow, Button, ButtonRow, SubContainer
+  H2, WelcomeContainer, LinkRow, Button, ButtonRow, SubContainer, InfoText
 } from "../styles/styles"
 
 const Home = () => {
-  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
+  const [userLoggedIn, setUserLoggedIn] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if(localStorage.getItem("user") && localStorage.getItem("token") && localStorage.getItem("timeTokenCreated")){
@@ -24,6 +25,7 @@ const Home = () => {
           localStorage.removeItem("token")
           localStorage.setItem("timeTokenCreated", "")
           localStorage.removeItem("timeTokenCreated")
+          navigate(0)
         }else{
           setUserLoggedIn(true)
         }
@@ -32,34 +34,19 @@ const Home = () => {
     }
   }, [])
 
-  const onLogoutClick = () => {
-
-    localStorage.setItem("user", "")
-    localStorage.removeItem("user")
-    localStorage.setItem("token", "")
-    localStorage.removeItem("token")
-    localStorage.setItem("timeTokenCreated", "")
-    localStorage.removeItem("timeTokenCreated")
-    setUserLoggedIn(false)
-  }
 
   return(
     <div>
       {userLoggedIn?
         <>
-          <SubContainer>
-            <ButtonRow>
-              <Button onClick={onLogoutClick}>Logout</Button>
-            </ButtonRow>
-          </SubContainer>
           <Topics/>
         </>
         :
         <>
           <WelcomeContainer>
             <H2>Welcome to discuss</H2>
-            <LinkRow>Login to your account: <a href="/login"><Button>Login</Button></a></LinkRow>
-            <LinkRow>Create a new account: <a href="/register"><Button>Register</Button></a></LinkRow>
+            <LinkRow><InfoText>Login to your account: </InfoText><a href="/login"><Button>Login</Button></a></LinkRow>
+            <LinkRow><InfoText>Create a new account: </InfoText><a href="/register"><Button>Register</Button></a></LinkRow>
           </WelcomeContainer>
         </>
       }

@@ -4,7 +4,9 @@ import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import TopicService from "../services/TopicService"
 import {
-  SubContainer, Form, TextRow, ButtonRow, Button, Input, MessageRow, ContentRow, Table, TBody, Tr, Td, MessagesTableContainer
+  SubContainer, UpperSubContainer, Form, TextRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, Input, InputRow,
+  MessageRow, ContentRow, Table, TBody, Tr, Td, MessagesTableContainer, InputTopicMessage, TableContainer, TableInside,
+  TdWriter, TdTime, TdButton, ButtonSmall, TdMessageTime, ThMessage
 } from "../styles/styles"
 
 const Topic = () => {
@@ -14,6 +16,7 @@ const Topic = () => {
   const [newMessageContent, setNewMessageContent] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
   const [user, setUser] = useState("")
+  const [newMessageButtonClicked, setNewMessageButtonClicked] = useState<boolean>(false)
 
   useEffect (() => {
     getTopic()
@@ -54,10 +57,6 @@ const Topic = () => {
     }
   }
 
-  const onBack = () => {
-    navigate("/")
-  }
-
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const user = localStorage.getItem("user")
@@ -78,22 +77,80 @@ const Topic = () => {
         })
     }
     setNewMessageContent("")
+    setNewMessageButtonClicked(false)
   }
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessageContent(e.currentTarget.value)
   }
 
+  const onClickNewMessage = () => {
+    setNewMessageButtonClicked(true)
+  }
+
+  const onCancel = () => {
+    setNewMessageButtonClicked(false)
+  }
+
   return(
-    <SubContainer>
-      <ButtonRow>
-        <Button onClick={onBack}>Back</Button>
-      </ButtonRow>
+    <>
       {id?
         <>
-          <TextRow>{topic?.creator} wrote:</TextRow>
-          <ContentRow>{topic?.content}</ContentRow>
-          <MessagesTableContainer>
+          <UpperSubContainer>
+            <TextRow>{topic?.creator} wrote:</TextRow>
+            <ContentRow>{topic?.content}</ContentRow>
+            {newMessageButtonClicked?
+              <Form onSubmit={onSubmit}>
+                <InputRow>
+                New message: <InputTopicMessage value={newMessageContent} onChange={handleMessageChange}/>
+                </InputRow>
+                <ButtonRow>
+                  <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit">Save</Button>
+                </ButtonRow>
+              </Form>
+              :<ButtonRow>
+                <ButtonToOpenForm onClick={onClickNewMessage}>Write new message</ButtonToOpenForm>
+              </ButtonRow>}
+          </UpperSubContainer>
+          <TableContainer>
+            <Table>
+              <TBody>
+                {messages&&topic?
+                  messages.map((message, index) =>
+                    <TableInside key={index}>
+                      <Tr>
+                        <ThMessage>
+                          {message.message}
+                        </ThMessage>
+                      </Tr>
+                      <Tr key={index}>
+                        <TdWriter>
+                          by {message.writer}
+                        </TdWriter>
+                        <TdMessageTime>
+                          on {message.timeCreated.toLocaleString()}
+                        </TdMessageTime>
+                        <TdButton>
+                          {user===message.writer?
+                            <ButtonSmall value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</ButtonSmall>
+                            :<></>}
+                        </TdButton>
+                      </Tr>
+                    </TableInside>
+                  ):<></>
+                }
+              </TBody>
+            </Table>
+          </TableContainer>
+        </>
+        :""}
+    </>
+  )
+}
+
+export default Topic
+/**
+ * <TableContainer>
             <Table>
               <TBody>
                 {messages&&topic?
@@ -118,19 +175,12 @@ const Topic = () => {
                 }
               </TBody>
             </Table>
-          </MessagesTableContainer>
-          <Form onSubmit={onSubmit}>
-            <MessageRow>
-              New message: <Input value={newMessageContent} onChange={handleMessageChange}/>
-            </MessageRow>
-            <ButtonRow>
-              <Button type="submit">Save</Button>
-            </ButtonRow>
-          </Form>
-        </>
-        :""}
-    </SubContainer>
-  )
-}
-
-export default Topic
+          </TableContainer>
+ */
+/**
+ * <Tr>
+                        <ThMessage>
+                          {message.message}
+                        </ThMessage>
+                      </Tr>
+ */

@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import logo from "../comment.png"
 import { OpenTopic, TopicWithTime } from "../types"
 import TopicService from "../services/TopicService"
 import { useNavigate } from "react-router-dom"
 import {
-  H2, SubContainer, Form, InputRow, ButtonRow, Button, Input, Table, TBody, Tr, Th, Td, TableContainer
+  H2, UpperSubContainer, Form, InputRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, ButtonSmall, TableInside,
+  Table, TBody, Tr, Th, TableContainer, InputTopicMessage, TopicContent,
+  TdCreator, TdCount, TdTime, TdButton
 } from "../styles/styles"
 
 const Topics = () => {
   const [newTopicContent, setNewTopicContent] = useState("")
   const [topics, setTopics] = useState<OpenTopic[]>([])
   const [topicsWithTime, setTopicsWithTime] = useState<TopicWithTime[]>([])
+  const [newTopicButtonClicked, setNewTopicButtonClicked] = useState<boolean>(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -24,7 +27,6 @@ const Topics = () => {
   const getAllTopics = async() => {
     TopicService.getTopics()
       .then((response) => {
-        //console.log(response.data)
         setTopics(response.data)
       })
   }
@@ -33,7 +35,6 @@ const Topics = () => {
     const topicsTimed:TopicWithTime[] = []
     if(topics){
       topics.map((topic) => {
-        //console.log(topic)
         const messagesInTopic = topic.messages
         messagesInTopic.sort((a,b) => {
           return new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime()
@@ -42,7 +43,6 @@ const Topics = () => {
           const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours() + 2)
           message.timeCreated = new Date(datetime)
         })
-        //console.log(messagesInTopic)
         let topicWithTime: TopicWithTime
         if(messagesInTopic[0]){
           topicWithTime = {
@@ -63,17 +63,13 @@ const Topics = () => {
             timeToCompare: new Date()
           }
         }
-        //console.log(topicWithTime)
         topicsTimed.push(topicWithTime)
-        //console.log(topicsTimed)
       })
     }
     topicsTimed.sort((a,b) => {
       return new Date(b.timeToCompare).getTime() - new Date(a.timeToCompare).getTime()
     })
-    //console.log(topicsTimed)
     setTopicsWithTime(topicsTimed)
-    //console.log(topicsWithTime)
   }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -85,7 +81,6 @@ const Topics = () => {
         content: newTopicContent,
         messages: []
       }
-      //console.log(newTopic)
       TopicService.createTopic(newTopic)
         .then((response) => {
           console.log(response.data)
@@ -94,6 +89,7 @@ const Topics = () => {
     }
 
     setNewTopicContent("")
+    setNewTopicButtonClicked(false)
   }
 
   const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,59 +98,69 @@ const Topics = () => {
 
   const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    //console.log("deletessä, ",e.currentTarget.value)
     TopicService.deleteTopic(e.currentTarget.value)
       .then((response) => {
         getAllTopics()
       })
   }
 
+  const onClickNewTopic = () => {
+    setNewTopicButtonClicked(true)
+  }
+
+  const onCancel = () => {
+    setNewTopicButtonClicked(false)
+  }
+
   return(
     <div>
-      <SubContainer>
+      <UpperSubContainer>
         <H2>Topics</H2>
-        <Form onSubmit={onSubmit}>
-          <InputRow>
-            Write a new topic: <Input value={newTopicContent} onChange={handleTopicChange}/>
-          </InputRow>
-          <ButtonRow>
-            <Button type="submit">Save</Button>
+        {newTopicButtonClicked?
+          <Form onSubmit={onSubmit}>
+            <InputRow>
+              Write a new topic: <InputTopicMessage value={newTopicContent} onChange={handleTopicChange}/>
+            </InputRow>
+            <ButtonRow>
+              <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit">Save</Button>
+            </ButtonRow>
+          </Form>
+          :<ButtonRow>
+            <ButtonToOpenForm onClick={onClickNewTopic}>Write new topic</ButtonToOpenForm>
           </ButtonRow>
-        </Form>
-      </SubContainer>
+        }
+      </UpperSubContainer>
       <TableContainer>
         <Table>
           <TBody>
-            <Tr>
-              <Th>Creator</Th>
-              <Th>Topic</Th>
-              <Th>Messages</Th>
-              <Th>Latest</Th>
-            </Tr>
             {topicsWithTime.map((topic, index) =>
-              <Tr key={index}>
-                <Td>
-                  {topic.creator}
-                </Td>
-                <Td>
-                  <Link to={`/topics/${topic.id - 1}`}>{topic.content}</Link>
-                </Td>
-                <Td>
-                  {topic.messages.length}
-                </Td>
-                <Td>
-                  {topic.time? topic.time.toLocaleString() : ""}
-                </Td>
-                <Td>
-                  <Button value={topic.id} onClick={(e) => onDelete(e)}>Delete</Button>
-                </Td>
-                {topic.messages.length===0?
-                  <Td>
-                    <Button value={topic.id} onClick={() => navigate(`/topics/update/${topic.id - 1}`)}>Update</Button>
-                  </Td>
-                  :<></>
-                }
-              </Tr>
+              <TableInside key={index}>
+                <Tr>
+                  <Th>
+                    <TopicContent to={`/topics/${topic.id - 1}`}>{topic.content}</TopicContent>
+                  </Th>
+                </Tr>
+                <Tr key={index}>
+                  <TdCreator>
+                    by {topic.creator}
+                  </TdCreator>
+                  <TdCount>
+                    <img src={logo} alt="Logo"/> {topic.messages.length}
+                  </TdCount>
+                  <TdTime>
+                    {topic.time? <>latest: {topic.time.toLocaleString()}</> : ""}
+                  </TdTime>
+                  <TdButton>
+                    {topic.messages.length===0?
+                      <ButtonSmall value={topic.id} onClick={() => navigate(`/topics/update/${topic.id - 1}`)}>Modify</ButtonSmall>
+                      :<></>
+                    }
+                  </TdButton>
+                  <TdButton>
+                    <ButtonSmall value={topic.id} onClick={(e) => onDelete(e)}>Delete</ButtonSmall>
+                  </TdButton>
+                </Tr>
+              </TableInside>
             )}
           </TBody>
         </Table>

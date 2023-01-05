@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
-  H2, SubContainer, Form, InputRow, ButtonRow, Button, Input
+  H2, SubContainer, Form, InputRow, ButtonRow, Button, CancelButton, Input, InfoTextShort
 } from "../styles/styles"
 
 const Register = () => {
@@ -39,16 +39,16 @@ const Register = () => {
       <H2>Register</H2>
       <Form onSubmit={onSubmit}>
         <InputRow>
-          email:   <Input type="text" name="email" id="email" placeholder="Your Email" onChange={event => setEmail(event.target.value)}/>
+          <InfoTextShort>email:</InfoTextShort><Input type="text" name="email" id="email" placeholder="Your Email" onChange={event => setEmail(event.target.value)}/>
         </InputRow>
         <InputRow>
-          username: <Input type="text" name="userName" id="userName" placeholder="Your Username" onChange={event => setUserName(event.target.value)}/>
+          <InfoTextShort>username:</InfoTextShort><Input type="text" name="userName" id="userName" placeholder="Your Username" onChange={event => setUserName(event.target.value)}/>
         </InputRow>
         <InputRow>
-          password: <Input type='password' name="password" id="password" placeholder="Your Password" onChange={event => setPassword(event.target.value)}/>
+          <InfoTextShort>password:</InfoTextShort><Input type='password' name="password" id="password" placeholder="Your Password" onChange={event => setPassword(event.target.value)}/>
         </InputRow>
         <ButtonRow>
-          <Button onClick={onCancel}>Cancel</Button><Button type="submit">Register</Button>
+          <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit">Register</Button>
         </ButtonRow>
       </Form>
     </SubContainer>

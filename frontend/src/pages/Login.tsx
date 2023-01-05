@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import LoginService from "../services/LoginService"
 import {
-  H2, SubContainer, Form, InputRow, ButtonRow, Button, Input
+  H2, SubContainer, Form, InputRow, ButtonRow, Button, CancelButton, Input, InfoTextShort
 } from "../styles/styles"
 
 const Login = () => {
@@ -10,11 +10,16 @@ const Login = () => {
   const [userName, setUserName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
 
+  useEffect(() => {
+    console.log("Login, useEffect")
+  }, [])
+
   const onSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    console.log("Login, onSubmitin alussa")
 
     if(userName && password){
-      console.log(userName)
+      console.log("Login, username on ",userName)
 
       try{
         LoginService.loginUser(userName, password)
@@ -23,7 +28,7 @@ const Login = () => {
             localStorage.setItem("token", response.data)
             const currentTime = new Date()
             localStorage.setItem("timeTokenCreated", currentTime.toString())
-            navigate("/")
+            navigate(-1)//("/")
           })
       }catch(error){
         console.log(error)
@@ -41,13 +46,13 @@ const Login = () => {
         <H2>Login</H2>
         <Form onSubmit={onSubmit}>
           <InputRow>
-            username: <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}/>
+            <InfoTextShort>username:</InfoTextShort><Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}/>
           </InputRow>
           <InputRow>
-            password: <Input type='password' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
+            <InfoTextShort>password:</InfoTextShort><Input type='password' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
           </InputRow>
           <ButtonRow>
-            <Button onClick={onCancel}>Cancel</Button><Button type="submit">Login</Button>
+            <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit">Login</Button>
           </ButtonRow>
         </Form>
       </SubContainer>
