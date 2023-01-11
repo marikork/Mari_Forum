@@ -40,8 +40,8 @@ public class MessageServiceImpl implements MessageService{
     public Message updateMessage(Message messageRequest, Long id) {
         Message message = messageRepository.findById(id).get();
         message.setMessage(messageRequest.getMessage());
-        message.setTimeCreated(message.getTimeCreated());
-        message.setWriter(message.getWriter());
+        message.setTimeCreated(messageRequest.getTimeCreated());
+        message.setWriter(messageRequest.getWriter());
     
         Message _message = messageRepository.save(message);
         return _message;

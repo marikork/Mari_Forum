@@ -32,10 +32,16 @@ export const Button = styled.button`
   margin-left: 5%;
   width: 100px;
   height: 30px;
+  color: white;
   background: transparent;
   border-radius: 15px;
-  background-color: #4de6bf;
+  background-color: #00b77a;//#4de6bf;//#01cb88;//#01b67a;
   border-style: none;
+  cursor: pointer;
+  :disabled {
+    background-color: #a6a6a6;//opacity: 0.6;
+    cursor: auto;
+  }
 `
 
 export const CancelButton = styled.button`
@@ -44,10 +50,12 @@ export const CancelButton = styled.button`
   margin-left: 5%;
   width: 100px;
   height: 30px;
+  color: white;
   background: transparent;
   border-radius: 15px;
-  background-color: #bfbfbf;
+  background-color: #a6a6a6;//#bfbfbf;
   border-style: none;
+  cursor: pointer;
 `
 
 export const ButtonToOpenForm = styled.button`
@@ -56,10 +64,12 @@ export const ButtonToOpenForm = styled.button`
   margin-left: 5%;
   width: 150px;
   height: 30px;
+  color: white;
   background: transparent;
   //border-radius: 15px;
-  background-color: #4de6bf;
+  background-color: #00b77a;//#4de6bf;
   border-style: none;
+  cursor: pointer;
 `
 /*
 export const LoginLink = styled(Link)`
@@ -112,10 +122,30 @@ export const InputTopicMessage = styled.input`
   }
 `
 
+export const InputModify = styled.input`
+  width: 335px;
+  margin-left: 0%;
+  max-width: 100%;
+`
+
+export const InputModifyMessage = styled.input`
+  font-family: Roboto;  
+  width: 335px;
+  margin-left: 0%;
+  font-size: 18px;
+  max-width: 100%;
+`
+
 export const H2 = styled.h2`
   font-family: Roboto;
   font-size: 24px;
   //padding-left: 10px;
+`
+
+export const H3 = styled.h3`
+  font-family: Roboto;
+  font-size: 16px;
+  margin-bottom: 20px;
 `
 
 export const InfoText = styled.p`
@@ -152,6 +182,7 @@ export const ButtonSmall = styled.button`
   border-radius: 15px;
   background-color: white;
   border-style: none;
+  cursor: pointer;
 `
 
 export const LinkRow = styled.div`
@@ -165,6 +196,15 @@ export const InputRow = styled.div`
   //margin-left: 5%;
   margin-bottom: 3%;
   margin-right: 5%;
+  display: flex;
+  justify-content: space-between;
+`
+
+export const InputModifyRow = styled.div`
+  //margin-left: 5%;
+  margin-bottom: 3%;
+  margin-right: 0%;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
 `
@@ -196,9 +236,39 @@ export const ButtonRow = styled.div`
   justify-content: right;
 `
 
+export const ButtonRowModify = styled.div`
+  //margin-left: 15%;
+  //margin-right: 5%;
+  display: flex;
+  justify-content: right;
+`
+
 export const Table = styled.table`
   background-color: white;
   width: 100%;
+  border-style: ridge;
+  margin-bottom: 3%;
+  @media (max-width: 768px) {
+    width: 80%;
+  }
+`
+
+export const TableMessages = styled.table`
+  background-color: white;
+  width: 100%;
+  border-top-style: solid;
+  border-top-color: rgba(0, 0, 255, 0.47);
+  margin-bottom: 3%;
+  @media (max-width: 768px) {
+    width: 80%;
+  }
+`
+
+export const TableTopics = styled.table`
+  background-color: white;
+  width: 100%;
+  border-style: ridge;
+  margin-bottom: 3%;
   @media (max-width: 768px) {
     width: 80%;
   }
@@ -226,7 +296,7 @@ export const Tr = styled.tr`
 export const Td = styled.td`
   background-color: white;
   text-align:left;
-  padding: 0px 50px 0px 0px;
+  //padding: 0px 50px 0px 0px;
   @media (max-width: 768px) {
     padding: 0px 5px 0px 0px;
   }
@@ -251,9 +321,11 @@ export const TdMessageTime = styled.td`
     padding: 0px 5px 0px 0px;
   }
 `
-export const ThMessage = styled.p`
+export const ThMessage = styled.th`
   font-size: 18px;
   margin: 0;
+  font-weight: normal !important;
+  text-align: left !important;
   //padding: 10px 10px 10px 0;
   @media (max-width: 768px) {
     padding: 1px 1px 1px 0;
@@ -299,6 +371,17 @@ export const TdButton = styled.td`
     padding: 0px 5px 0px 0px;
   }
 `
+
+export const SaveButton = styled.div`
+  background-color: white;
+  text-align:left;
+  width: 10%;
+  //padding: 0px 50px 0px 0px;
+  @media (max-width: 768px) {
+    padding: 0px 5px 0px 0px;
+  }
+`
+
 export const Th = styled.th`
   text-align:left;
   background-color: white;
@@ -415,6 +498,49 @@ export const MessagesTableContainer = styled.div`
     margin-left: 0;
     margin-right: 0;
   }
+`
+
+export const ModifyingContainer = styled.div`
+  margin-top: 10%;
+  margin-left: 30%;
+  margin-right: 30%;
+  font-family: Roboto;
+  @media (max-width: 768px) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media (max-width: 280px) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+`
+
+export const ConfirmingContainer = styled.div`
+  background: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+`
+
+export const ConfirmingDialog = styled.div`
+  display: block;
+`
+
+export const ConfirmingDialogBody = styled.div`
+  width: 300px;
+  padding: 30px;
+  text-align: left;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 20px 75px rgb(0 0 0 / 13%);
+  color: #666;
 `
 
 export const Hr = styled.hr`

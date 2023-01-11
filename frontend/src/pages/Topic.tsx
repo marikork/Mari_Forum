@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
-import { OpenTopic, Message } from "../types"
+import { OpenTopic, Message, MessageWithTopicId } from "../types"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import TopicService from "../services/TopicService"
 import {
-  SubContainer, UpperSubContainer, Form, TextRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, Input, InputRow,
-  MessageRow, ContentRow, Table, TBody, Tr, Td, MessagesTableContainer, InputTopicMessage, TableContainer, TableInside,
-  TdWriter, TdTime, TdButton, ButtonSmall, TdMessageTime, ThMessage
+  UpperSubContainer, Form, TextRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, InputRow,
+  ContentRow, TBody, Tr, Td, InputTopicMessage, TableContainer, ButtonRowModify,
+  TdWriter, TdButton, ButtonSmall, TdMessageTime, ThMessage, InputModifyMessage, SaveButton, TableMessages
 } from "../styles/styles"
 
 const Topic = () => {
@@ -17,6 +17,9 @@ const Topic = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [user, setUser] = useState("")
   const [newMessageButtonClicked, setNewMessageButtonClicked] = useState<boolean>(false)
+  const [show, setShow] = useState(false)
+  const [selected, setSelected] = useState<number>(-1)
+  const [messageToModify, setMessageToModify] = useState("")
 
   useEffect (() => {
     getTopic()
@@ -26,6 +29,13 @@ const Topic = () => {
       setUser(currentUser)
     }
   }, [])
+
+  useEffect(() => {
+    const button = document.getElementById("SaveButton") as HTMLButtonElement | null
+    if(button && newMessageContent.length>0){
+      button.disabled= false
+    }
+  }, [newMessageContent])
 
   const getTopic = async() => {
     let idToNumber = Number(id)
@@ -89,14 +99,49 @@ const Topic = () => {
   }
 
   const onCancel = () => {
+    setNewMessageContent("")
     setNewMessageButtonClicked(false)
+  }
+
+  const onCancelModifying = () => {
+    setShow(false)
+    setSelected(-1)
+    setMessageToModify("")
+  }
+
+  const onSubmitModifying = () => {
+    const user = localStorage.getItem("user")
+    const time = new Date()
+    if(user&&messageToModify&&topic){
+      const newMessageToUpdate: MessageWithTopicId = {
+        id: messages[selected].id,
+        writer: user,
+        message: messageToModify,
+        topic: topic.id,
+        timeCreated: time
+      }
+      TopicService.updateMessages(messages[selected].id, newMessageToUpdate)
+        .then(() => {
+          navigate(0)
+        })
+    }
+  }
+
+  const handleModifyingMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessageToModify(e.currentTarget.value)
+  }
+
+  const clickModifyHandler = (index:number, message: string) => {
+    setShow(true)
+    setSelected(index)
+    setMessageToModify(message)
   }
 
   return(
     <>
       {id?
         <>
-          <UpperSubContainer>
+          <UpperSubContainer onClick={onCancelModifying}>
             <TextRow>{topic?.creator} wrote:</TextRow>
             <ContentRow>{topic?.content}</ContentRow>
             {newMessageButtonClicked?
@@ -105,42 +150,52 @@ const Topic = () => {
                 New message: <InputTopicMessage value={newMessageContent} onChange={handleMessageChange}/>
                 </InputRow>
                 <ButtonRow>
-                  <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit">Save</Button>
+                  <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Save</Button>
                 </ButtonRow>
               </Form>
               :<ButtonRow>
                 <ButtonToOpenForm onClick={onClickNewMessage}>Write new message</ButtonToOpenForm>
               </ButtonRow>}
           </UpperSubContainer>
-          <TableContainer>
-            <Table>
-              <TBody>
-                {messages&&topic?
-                  messages.map((message, index) =>
-                    <TableInside key={index}>
+          <TableContainer onClick={onCancelModifying}>
+            {messages&&topic?
+              messages.map((message, index) =>
+                <TableMessages key={index} onClick={e => e.stopPropagation()}>
+                  {selected===index && show?
+                    <TBody>
+                      <Tr>
+                        <Td>
+                          <Form onSubmit={onSubmitModifying}>
+                            <InputModifyMessage value={messageToModify} onChange={handleModifyingMessageChange}/>
+                            <ButtonRowModify>
+                              <SaveButton><ButtonSmall type="submit">Save</ButtonSmall></SaveButton>
+                            </ButtonRowModify>
+                          </Form>
+                        </Td>
+                      </Tr>
+                    </TBody>
+                    :
+                    <TBody>
                       <Tr>
                         <ThMessage>
                           {message.message}
                         </ThMessage>
                       </Tr>
-                      <Tr key={index}>
+                      <Tr>
                         <TdWriter>
-                          by {message.writer}
+                              by {message.writer}
                         </TdWriter>
                         <TdMessageTime>
-                          on {message.timeCreated.toLocaleString()}
+                          on <>{message.timeCreated.toLocaleDateString()} {message.timeCreated.getHours()}:{message.timeCreated.getMinutes()}</>
                         </TdMessageTime>
                         <TdButton>
-                          {user===message.writer?
-                            <ButtonSmall value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</ButtonSmall>
-                            :<></>}
+                          <ButtonSmall id={index.toString()} onClick={() => clickModifyHandler(index, message.message)}>Modify</ButtonSmall>
                         </TdButton>
                       </Tr>
-                    </TableInside>
-                  ):<></>
-                }
-              </TBody>
-            </Table>
+                    </TBody>}
+                </TableMessages>
+              ):<></>
+            }
           </TableContainer>
         </>
         :""}
@@ -149,38 +204,3 @@ const Topic = () => {
 }
 
 export default Topic
-/**
- * <TableContainer>
-            <Table>
-              <TBody>
-                {messages&&topic?
-                  messages.map((message, index) =>
-                    <Tr key={index}>
-                      <Td>
-                        {message.writer}:
-                      </Td>
-                      <Td>
-                        {message.message}
-                      </Td>
-                      <Td>
-                        {message.timeCreated.toLocaleString()}
-                      </Td>
-                      {user===message.writer?
-                        <Td>
-                          <Button value={index} onClick={() => navigate(`/topics/${topic.id - 1}/${index}`)}>Update</Button>
-                        </Td>
-                        :<></>}
-                    </Tr>
-                  ):<></>
-                }
-              </TBody>
-            </Table>
-          </TableContainer>
- */
-/**
- * <Tr>
-                        <ThMessage>
-                          {message.message}
-                        </ThMessage>
-                      </Tr>
- */

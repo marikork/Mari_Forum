@@ -10,8 +10,6 @@ import Topic from "./pages/Topic"
 import {
   Container, Hr, H1, MainHeaderLink, NavBar, NavLink
 } from "./styles/styles"
-import UpdateMessage from "./pages/UpdateMessage"
-import UpdateTopic from "./pages/UpdateTopic"
 import { useNavigate } from "react-router-dom"
 
 const App = () => {
@@ -50,8 +48,6 @@ const App = () => {
         <Route path="/register" element={<Register />}/>
         <Route path="/topics" element={<Topics/>}/>
         <Route path="topics/:id" element={<Topic/>}/>
-        <Route path="topics/:id/:index" element={<UpdateMessage/>}/>
-        <Route path="topics/update/:id" element={<UpdateTopic/>}/>
         <Route path="/" element={<Home/>}/>
       </Routes>
     </Container>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react"
 import logo from "../comment.png"
-import { OpenTopic, TopicWithTime } from "../types"
+import { Message, OpenTopic, TopicWithTime } from "../types"
 import TopicService from "../services/TopicService"
 import { useNavigate } from "react-router-dom"
+import Confirm from "./Confirm"
 import {
-  H2, UpperSubContainer, Form, InputRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, ButtonSmall, TableInside,
+  H2, UpperSubContainer, Form, InputRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, ButtonSmall,
   Table, TBody, Tr, Th, TableContainer, InputTopicMessage, TopicContent,
-  TdCreator, TdCount, TdTime, TdButton
+  TdCreator, TdCount, TdTime, TdButton, Td, InputModify, ButtonRowModify, SaveButton
 } from "../styles/styles"
 
 const Topics = () => {
@@ -15,6 +16,13 @@ const Topics = () => {
   const [topicsWithTime, setTopicsWithTime] = useState<TopicWithTime[]>([])
   const [newTopicButtonClicked, setNewTopicButtonClicked] = useState<boolean>(false)
   const navigate = useNavigate()
+  const [show, setShow] = useState(false)
+  const [selected, setSelected] = useState<number>(-1)
+  const [topicContentToModify, setTopicContentToModify] = useState("")
+  const [selectedId, setSelectedId] = useState(-1)
+  const [deleteClicked, setDeleteClicked] = useState(false)
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false)
+  const [idToDelete, setIdToDelete] = useState<number>()
 
   useEffect(() => {
     getAllTopics()
@@ -23,6 +31,20 @@ const Topics = () => {
   useEffect(() => {
     setTimeToTopics()
   }, [topics])
+
+  useEffect(() => {
+    const button = document.getElementById("SaveButton") as HTMLButtonElement | null
+    if(button && newTopicContent.length>0){
+      button.disabled= false
+    }
+  }, [newTopicContent])
+
+  useEffect(() => {
+    console.log("deleteConfirmation on ", deleteConfirmation)
+    if(deleteConfirmation){
+      handleDelete()
+    }
+  }, [deleteConfirmation])
 
   const getAllTopics = async() => {
     TopicService.getTopics()
@@ -82,8 +104,7 @@ const Topics = () => {
         messages: []
       }
       TopicService.createTopic(newTopic)
-        .then((response) => {
-          console.log(response.data)
+        .then(() => {
           getAllTopics()
         })
     }
@@ -98,10 +119,18 @@ const Topics = () => {
 
   const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    TopicService.deleteTopic(e.currentTarget.value)
-      .then((response) => {
+    setIdToDelete(Number(e.currentTarget.value))
+    setDeleteClicked(true)
+  }
+
+  const handleDelete = () => {
+    TopicService.deleteTopic(idToDelete)
+      .then(() => {
         getAllTopics()
       })
+
+    setDeleteConfirmation(false)
+    setIdToDelete(-1)
   }
 
   const onClickNewTopic = () => {
@@ -109,12 +138,48 @@ const Topics = () => {
   }
 
   const onCancel = () => {
+    setNewTopicContent("")
     setNewTopicButtonClicked(false)
+  }
+
+  const clickModifyHandler = (index:number, content: string, id:number) => {
+    setShow(true)
+    setSelected(index)
+    setTopicContentToModify(content)
+    setSelectedId(id)
+  }
+
+  const onSubmitModifying = () => {
+    const user = localStorage.getItem("user")
+    const messages : Message[] = []
+    if(user && topicContentToModify){
+      const newTopicToUpdate: OpenTopic = {
+        id: selectedId,
+        creator: user,
+        content: topicContentToModify,
+        messages: messages
+      }
+      TopicService.updateTopic(selectedId, newTopicToUpdate)
+        .then(() => {
+          navigate(0)
+        })
+    }
+  }
+
+  const handleModifyingContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTopicContentToModify(e.currentTarget.value)
+  }
+
+  const onCancelModifying = () => {
+    setShow(false)
+    setSelected(-1)
+    setTopicContentToModify("")
+    setSelectedId(-1)
   }
 
   return(
     <div>
-      <UpperSubContainer>
+      <UpperSubContainer onClick={onCancelModifying}>
         <H2>Topics</H2>
         {newTopicButtonClicked?
           <Form onSubmit={onSubmit}>
@@ -122,7 +187,7 @@ const Topics = () => {
               Write a new topic: <InputTopicMessage value={newTopicContent} onChange={handleTopicChange}/>
             </InputRow>
             <ButtonRow>
-              <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit">Save</Button>
+              <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Save</Button>
             </ButtonRow>
           </Form>
           :<ButtonRow>
@@ -130,11 +195,24 @@ const Topics = () => {
           </ButtonRow>
         }
       </UpperSubContainer>
-      <TableContainer>
-        <Table>
-          <TBody>
-            {topicsWithTime.map((topic, index) =>
-              <TableInside key={index}>
+      <TableContainer onClick={onCancelModifying}>
+        {topicsWithTime.map((topic, index) =>
+          <Table key={index} onClick={e => e.stopPropagation()}>
+            {selected===index && show?
+              <TBody>
+                <Tr>
+                  <Td>
+                    <Form onSubmit={onSubmitModifying}>
+                      <InputModify value={topicContentToModify} onChange={handleModifyingContentChange}/>
+                      <ButtonRowModify>
+                        <SaveButton><ButtonSmall type="submit">Save</ButtonSmall></SaveButton>
+                      </ButtonRowModify>
+                    </Form>
+                  </Td>
+                </Tr>
+              </TBody>
+              :
+              <TBody>
                 <Tr>
                   <Th>
                     <TopicContent to={`/topics/${topic.id - 1}`}>{topic.content}</TopicContent>
@@ -148,11 +226,11 @@ const Topics = () => {
                     <img src={logo} alt="Logo"/> {topic.messages.length}
                   </TdCount>
                   <TdTime>
-                    {topic.time? <>latest: {topic.time.toLocaleString()}</> : ""}
+                    {topic.time? <>latest: {topic.time.toLocaleDateString()} {topic.time.getHours()}:{topic.time.getMinutes()}</> : ""}
                   </TdTime>
                   <TdButton>
                     {topic.messages.length===0?
-                      <ButtonSmall value={topic.id} onClick={() => navigate(`/topics/update/${topic.id - 1}`)}>Modify</ButtonSmall>
+                      <ButtonSmall value={topic.id} onClick={() => clickModifyHandler(index, topic.content, topic.id)}>Modify</ButtonSmall>
                       :<></>
                     }
                   </TdButton>
@@ -160,11 +238,13 @@ const Topics = () => {
                     <ButtonSmall value={topic.id} onClick={(e) => onDelete(e)}>Delete</ButtonSmall>
                   </TdButton>
                 </Tr>
-              </TableInside>
-            )}
-          </TBody>
-        </Table>
+              </TBody>}
+          </Table>
+        )}
       </TableContainer>
+      {deleteClicked?
+        <Confirm setDeleteConfirmation={setDeleteConfirmation} setDeleteClicked={setDeleteClicked}/>
+        :""}
     </div>
   )
 }
