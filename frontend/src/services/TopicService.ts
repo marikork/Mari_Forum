@@ -29,7 +29,6 @@ const updateMessages = (id: number, data: MessageWithTopicId) => {
 }
 
 const updateTopic = (id: number, data: OpenTopic) => {
-  console.log("updatessa ", id)
   return api.put<OpenTopic>(`/topics/${id}`, data)
 }
 

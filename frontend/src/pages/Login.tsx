@@ -2,18 +2,23 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import LoginService from "../services/LoginService"
 import {
-  H2, SubContainer, Form, InputRow, ButtonRow, Button, CancelButton, Input, InfoTextShort
+  H2, SubContainer, Form, InputRow, ButtonRow, Button, CancelButton, Input, InfoTextShort, ErrorInfo
 } from "../styles/styles"
 
 const Login = () => {
   const navigate = useNavigate()
   const [userName, setUserName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
     const button = document.getElementById("SaveButton") as HTMLButtonElement | null
     if(button && userName.length>0 && password.length>0){
-      button.disabled= false
+      button.disabled = false
+    }
+    if((button && userName.length===0) || (button && password.length===0)){
+      button.disabled = true
     }
   }, [userName, password])
 
@@ -30,8 +35,22 @@ const Login = () => {
             localStorage.setItem("timeTokenCreated", currentTime.toString())
             navigate(-1)
           })
+          .catch((error) => {
+            console.log("LoginServicen catchissä error on ", error)
+            setError(true)
+            if(error.response.status===403){
+              console.log("on 403")
+              setErrorMessage("Username or password is not valid")
+            }else{
+              setErrorMessage("There was an error")
+            }
+            setTimeout(() => {
+              setError(false)
+              setErrorMessage("")
+            }, 2000)
+          })
       }catch(error){
-        console.log(error)
+        console.log("Catchissä error on ",error)
       }
     }
   }
@@ -63,6 +82,9 @@ const Login = () => {
             <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Login</Button>
           </ButtonRow>
         </Form>
+        {error?
+          <ErrorInfo>{errorMessage}</ErrorInfo>
+          :""}
       </SubContainer>
     </div>
   )

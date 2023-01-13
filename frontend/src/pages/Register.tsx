@@ -13,7 +13,10 @@ const Register = () => {
   useEffect(() => {
     const button = document.getElementById("SaveButton") as HTMLButtonElement | null
     if(button && email.length>0 && userName.length>0 && password.length>0){
-      button.disabled= false
+      button.disabled = false
+    }
+    if((button && email.length===0) || (button && userName.length===0) || (button && password.length>0)){
+      button.disabled = true
     }
   }, [userName, password])
 

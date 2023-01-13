@@ -3,11 +3,15 @@ import { OpenTopic, Message, MessageWithTopicId } from "../types"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import TopicService from "../services/TopicService"
+import edit from "../utils/edit-button.png"
 import {
   UpperSubContainer, Form, TextRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, InputRow,
-  ContentRow, TBody, Tr, Td, InputTopicMessage, TableContainer, ButtonRowModify,
-  TdWriter, TdButton, ButtonSmall, TdMessageTime, ThMessage, InputModifyMessage, SaveButton, TableMessages
+  ContentRow, TBody, Tr, Td, InputTopicMessage, TableContainer, ButtonRowModify, ImageLink,
+  TdWriter, TdButton, TdMessageTime, ThMessage, InputModifyMessage, TableMessages, ButtonRowToOpenForm
 } from "../styles/styles"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime)
 
 const Topic = () => {
   const { id } =useParams()
@@ -27,15 +31,30 @@ const Topic = () => {
     const currentUser = localStorage.getItem("user")
     if(currentUser){
       setUser(currentUser)
+    }else{
+      navigate(-1)
     }
   }, [])
 
   useEffect(() => {
     const button = document.getElementById("SaveButton") as HTMLButtonElement | null
     if(button && newMessageContent.length>0){
-      button.disabled= false
+      button.disabled = false
+    }
+    if(button && newMessageContent.length===0){
+      button.disabled = true
     }
   }, [newMessageContent])
+
+  useEffect(() => {
+    const button = document.getElementById("SaveModificationButton") as HTMLButtonElement | null
+    if(button && messageToModify.length>0){
+      button.disabled = false
+    }
+    if(button && messageToModify.length===0){
+      button.disabled =true
+    }
+  }, [messageToModify])
 
   const getTopic = async() => {
     let idToNumber = Number(id)
@@ -153,9 +172,9 @@ const Topic = () => {
                   <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Save</Button>
                 </ButtonRow>
               </Form>
-              :<ButtonRow>
+              :<ButtonRowToOpenForm>
                 <ButtonToOpenForm onClick={onClickNewMessage}>Write new message</ButtonToOpenForm>
-              </ButtonRow>}
+              </ButtonRowToOpenForm>}
           </UpperSubContainer>
           <TableContainer onClick={onCancelModifying}>
             {messages&&topic?
@@ -168,7 +187,7 @@ const Topic = () => {
                           <Form onSubmit={onSubmitModifying}>
                             <InputModifyMessage value={messageToModify} onChange={handleModifyingMessageChange}/>
                             <ButtonRowModify>
-                              <SaveButton><ButtonSmall type="submit">Save</ButtonSmall></SaveButton>
+                              <Button type="submit" id="SaveModificationButton" disabled>Save</Button>
                             </ButtonRowModify>
                           </Form>
                         </Td>
@@ -186,10 +205,10 @@ const Topic = () => {
                               by {message.writer}
                         </TdWriter>
                         <TdMessageTime>
-                          on <>{message.timeCreated.toLocaleDateString()} {message.timeCreated.getHours()}:{message.timeCreated.getMinutes()}</>
+                          <>{dayjs(message.timeCreated).fromNow(true)}</>
                         </TdMessageTime>
                         <TdButton>
-                          <ButtonSmall id={index.toString()} onClick={() => clickModifyHandler(index, message.message)}>Modify</ButtonSmall>
+                          <ImageLink src={edit} alt="edit" onClick={() => clickModifyHandler(index, message.message)}/>
                         </TdButton>
                       </Tr>
                     </TBody>}

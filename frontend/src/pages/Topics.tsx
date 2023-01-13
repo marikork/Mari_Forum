@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react"
-import logo from "../comment.png"
+//import logo from "../comment.png"
+import logo from "../utils/comment.png"
+import bin from "../utils/bin.png"
+import edit from "../utils/edit-button.png"
 import { Message, OpenTopic, TopicWithTime } from "../types"
 import TopicService from "../services/TopicService"
 import { useNavigate } from "react-router-dom"
 import Confirm from "./Confirm"
 import {
-  H2, UpperSubContainer, Form, InputRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, ButtonSmall,
+  H2, UpperSubContainer, Form, InputRow, ButtonRow, Button, CancelButton, ButtonToOpenForm,
   Table, TBody, Tr, Th, TableContainer, InputTopicMessage, TopicContent,
-  TdCreator, TdCount, TdTime, TdButton, Td, InputModify, ButtonRowModify, SaveButton
+  TdCreator, TdCount, TdTime, TdButton, Td, InputModify, ButtonRowModify, ImageLink, ButtonRowToOpenForm
 } from "../styles/styles"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime)
 
 const Topics = () => {
   const [newTopicContent, setNewTopicContent] = useState("")
@@ -35,12 +41,24 @@ const Topics = () => {
   useEffect(() => {
     const button = document.getElementById("SaveButton") as HTMLButtonElement | null
     if(button && newTopicContent.length>0){
-      button.disabled= false
+      button.disabled = false
+    }
+    if(button && newTopicContent.length===0){
+      button.disabled = true
     }
   }, [newTopicContent])
 
   useEffect(() => {
-    console.log("deleteConfirmation on ", deleteConfirmation)
+    const button = document.getElementById("SaveModificationButton") as HTMLButtonElement | null
+    if(button && topicContentToModify.length>0){
+      button.disabled = false
+    }
+    if(button && topicContentToModify.length===0){
+      button.disabled =true
+    }
+  }, [topicContentToModify])
+
+  useEffect(() => {
     if(deleteConfirmation){
       handleDelete()
     }
@@ -117,9 +135,19 @@ const Topics = () => {
     setNewTopicContent(e.currentTarget.value)
   }
 
+  /*
   const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     setIdToDelete(Number(e.currentTarget.value))
+    setDeleteClicked(true)
+  }
+  */
+
+  const onDelete = (id:number) => {
+    //e.preventDefault()
+    console.log(id)
+    //setIdToDelete(Number(e.currentTarget.value))
+    setIdToDelete(id)
     setDeleteClicked(true)
   }
 
@@ -190,9 +218,9 @@ const Topics = () => {
               <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Save</Button>
             </ButtonRow>
           </Form>
-          :<ButtonRow>
+          :<ButtonRowToOpenForm>
             <ButtonToOpenForm onClick={onClickNewTopic}>Write new topic</ButtonToOpenForm>
-          </ButtonRow>
+          </ButtonRowToOpenForm>
         }
       </UpperSubContainer>
       <TableContainer onClick={onCancelModifying}>
@@ -205,7 +233,7 @@ const Topics = () => {
                     <Form onSubmit={onSubmitModifying}>
                       <InputModify value={topicContentToModify} onChange={handleModifyingContentChange}/>
                       <ButtonRowModify>
-                        <SaveButton><ButtonSmall type="submit">Save</ButtonSmall></SaveButton>
+                        <Button type="submit" id="SaveModificationButton" disabled>Save</Button>
                       </ButtonRowModify>
                     </Form>
                   </Td>
@@ -226,16 +254,16 @@ const Topics = () => {
                     <img src={logo} alt="Logo"/> {topic.messages.length}
                   </TdCount>
                   <TdTime>
-                    {topic.time? <>latest: {topic.time.toLocaleDateString()} {topic.time.getHours()}:{topic.time.getMinutes()}</> : ""}
+                    {topic.time? <> {dayjs(topic.time).fromNow(true)}</> : ""}
                   </TdTime>
                   <TdButton>
                     {topic.messages.length===0?
-                      <ButtonSmall value={topic.id} onClick={() => clickModifyHandler(index, topic.content, topic.id)}>Modify</ButtonSmall>
+                      <ImageLink src={edit} alt="edit" onClick={() => clickModifyHandler(index, topic.content, topic.id)}/>
                       :<></>
                     }
                   </TdButton>
                   <TdButton>
-                    <ButtonSmall value={topic.id} onClick={(e) => onDelete(e)}>Delete</ButtonSmall>
+                    <ImageLink src={bin} alt="bin" onClick={() => onDelete(topic.id)}/>
                   </TdButton>
                 </Tr>
               </TBody>}

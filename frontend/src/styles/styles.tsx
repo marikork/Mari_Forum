@@ -2,118 +2,75 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 
 export const NavBar = styled.nav` 
-font-size: 12px;
-top: 0;
-z-index: 999;
-height: 25px;
-background-color: rgba(0, 0, 255, 0.47);
-display: flex;
-justify-content: right;
-align-items: center;
+  font-size: 12px;
+  top: 0;
+  z-index: 999;
+  height: 25px;
+  background-color: rgba(0, 0, 255, 0.47);
+  display: flex;
+  justify-content: right;
+  align-items: center;
 `
 export const NavLink = styled(Link)`
-text-decoration: none;
-font-weight: bold;
-font-size: 1.1rem;
-color: #fff;
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 1rem 2rem;
-height: 100%;
-&:hover {
-    color: #ffdab3;
-}
-`
-
-export const Button = styled.button`
-  font-family: Roboto !important;
-  font-size: 15px;
-  margin-left: 5%;
-  width: 100px;
-  height: 30px;
-  color: white;
-  background: transparent;
-  border-radius: 15px;
-  background-color: #00b77a;//#4de6bf;//#01cb88;//#01b67a;
-  border-style: none;
-  cursor: pointer;
-  :disabled {
-    background-color: #a6a6a6;//opacity: 0.6;
-    cursor: auto;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  height: 100%;
+  &:hover {
+      color: #ffdab3;
   }
 `
-
-export const CancelButton = styled.button`
-  font-family: Roboto !important;
-  font-size: 15px;
-  margin-left: 5%;
-  width: 100px;
-  height: 30px;
-  color: white;
-  background: transparent;
-  border-radius: 15px;
-  background-color: #a6a6a6;//#bfbfbf;
-  border-style: none;
-  cursor: pointer;
-`
-
-export const ButtonToOpenForm = styled.button`
-  font-family: Roboto !important;
-  font-size: 15px;
-  margin-left: 5%;
-  width: 150px;
-  height: 30px;
-  color: white;
-  background: transparent;
-  //border-radius: 15px;
-  background-color: #00b77a;//#4de6bf;
-  border-style: none;
-  cursor: pointer;
-`
-/*
-export const LoginLink = styled(Link)`
-  font-family: Roboto;
-  font-size: 14px;
-  text-decoration:none;
-  color: black;
-  border-style: solid;
-  margin-left: 10px;
-  margin-bottom: 10px;
-  padding: 5px;
-  border-radius: 5px;
-`*/
-
 export const MainHeaderLink = styled(Link)`
-  font-family: Roboto;
   font-size: 32px;
   text-decoration: none;
   font-weight: bold;
   color: black;
 `
-
 export const H1 = styled.h1`
-  font-family: Roboto;
   font-size: 32px;
   @media (max-width: 768px) {
     margin-left: 2%;
   }
 `
-
+export const Button = styled.button`
+  font-size: 15px;
+  margin-left: 5%;
+  width: 100px;
+  height: 30px;
+  color: white;
+  background: transparent;
+  border-radius: 15px;
+  background-color: #00b77a;
+  border-style: none;
+  cursor: pointer;
+  :disabled {
+    background-color: #a6a6a6;
+    cursor: auto;
+  }
+`
+export const CancelButton = styled(Button)`
+  background-color: #a6a6a6;
+`
+export const ButtonToOpenForm = styled(Button)`
+  width: 150px;
+  background-color: #00b77a;
+  border-radius: 0px;
+`
 export const Form = styled.form`
   
 `
-
 export const Input = styled.input`
   width: 280px;
   margin-left: 5%;
   max-width: 100%;
 `
-
-export const InputTopicMessage = styled.input`
+export const InputTopicMessage = styled(Input)`
   width: 380px;
-  margin-left: 5%;
-  max-width: 100%;
   @media (max-width: 1499px) {
     width: 580px;
   }
@@ -121,50 +78,40 @@ export const InputTopicMessage = styled.input`
     width: 680px;
   }
 `
-
-export const InputModify = styled.input`
+export const InputModify = styled(Input)`
   width: 335px;
   margin-left: 0%;
-  max-width: 100%;
 `
-
-export const InputModifyMessage = styled.input`
-  font-family: Roboto;  
+export const InputModifyMessage = styled(Input)`
   width: 335px;
   margin-left: 0%;
   font-size: 18px;
-  max-width: 100%;
 `
-
 export const H2 = styled.h2`
-  font-family: Roboto;
   font-size: 24px;
-  //padding-left: 10px;
 `
-
 export const H3 = styled.h3`
-  font-family: Roboto;
   font-size: 16px;
   margin-bottom: 20px;
 `
-
 export const InfoText = styled.p`
-  font-family: Roboto;
   font-size: 16px;
   margin-top: 1%;
   width: 180px;
 `
-
-export const InfoTextShort = styled.p`
-  font-family: Roboto;
-  font-size: 16px;
-  margin-top: 1%;
+export const InfoTextShort = styled(InfoText)`
   margin-bottom: 1%;
   width: 120px;
 `
-
+export const ErrorInfo = styled(InfoText)`
+  font-size: 18px;
+  width: 100%;
+  padding: 1%;
+  text-align: center;
+  border-style: solid;
+  border-color: red;
+`
 export const TopicContent = styled(Link)`
-font-family: Roboto;
   font-size: 16px;
   font-weight: bold;
   margin-top: 1%;
@@ -172,48 +119,8 @@ font-family: Roboto;
   text-decoration: none;
 `
 
-export const ButtonSmall = styled.button`
-  font-family: Roboto !important;
-  font-size: 15px;
-  margin-left: 5%;
-  //width: 100px;
-  //height: 30px;
-  background: transparent;
-  border-radius: 15px;
-  background-color: white;
-  border-style: none;
+export const ImageLink = styled.img`
   cursor: pointer;
-`
-
-export const LinkRow = styled.div`
-  //margin-left: 15%;
-  margin-bottom: 3%;
-  display: flex;
-  justify-content: left;
-`
-
-export const InputRow = styled.div`
-  //margin-left: 5%;
-  margin-bottom: 3%;
-  margin-right: 5%;
-  display: flex;
-  justify-content: space-between;
-`
-
-export const InputModifyRow = styled.div`
-  //margin-left: 5%;
-  margin-bottom: 3%;
-  margin-right: 0%;
-  max-width: 100%;
-  display: flex;
-  justify-content: space-between;
-`
-
-export const MessageRow = styled.div`
-  margin-left: 0%;
-  margin-bottom: 3%;
-  display: flex;
-  justify-content: left;
 `
 
 export const TextRow = styled.p`
@@ -221,67 +128,47 @@ export const TextRow = styled.p`
   justify-content: left;
 `
 
-export const ContentRow = styled.p`
+export const LinkRow = styled.div`
+  margin-bottom: 3%;
   display: flex;
   justify-content: left;
+`
+
+export const InputRow = styled(LinkRow)`
+  margin-right: 5%;
+  justify-content: space-between;
+`
+
+export const ContentRow = styled(TextRow)`
   font-weight: bold;
 `
-
-export const ButtonRow = styled.div`
+export const ButtonRow = styled(LinkRow)`
   margin-left: 15%;
   margin-right: 5%;
-  margin-bottom: 3%;
   margin-top: 3%;
-  display: flex;
   justify-content: right;
 `
-
-export const ButtonRowModify = styled.div`
-  //margin-left: 15%;
-  //margin-right: 5%;
-  display: flex;
-  justify-content: right;
+export const ButtonRowToOpenForm = styled(ButtonRow)`
+  margin-right: 0%;
 `
-
+export const ButtonRowModify = styled(ButtonRow)`
+  margin-right: 2%;
+  margin-bottom: 1%;
+  @media (max-width: 992px) {
+    margin-top: 2%;
+  }
+`
 export const Table = styled.table`
   background-color: white;
   width: 100%;
   border-style: ridge;
   margin-bottom: 3%;
-  @media (max-width: 768px) {
-    width: 80%;
-  }
 `
 
-export const TableMessages = styled.table`
-  background-color: white;
-  width: 100%;
+export const TableMessages = styled(Table)`
+  border-style: none;
   border-top-style: solid;
   border-top-color: rgba(0, 0, 255, 0.47);
-  margin-bottom: 3%;
-  @media (max-width: 768px) {
-    width: 80%;
-  }
-`
-
-export const TableTopics = styled.table`
-  background-color: white;
-  width: 100%;
-  border-style: ridge;
-  margin-bottom: 3%;
-  @media (max-width: 768px) {
-    width: 80%;
-  }
-`
-
-export const TableInside = styled.table`
-  background-color: white;
-  width: 100%;
-  border-style: ridge;
-  margin-bottom: 3%;
-  @media (max-width: 768px) {
-    width: 80%;
-  }
 `
 
 export const TBody = styled.tbody`
@@ -296,29 +183,22 @@ export const Tr = styled.tr`
 export const Td = styled.td`
   background-color: white;
   text-align:left;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
-  }
 `
 
-export const TdWriter = styled.td`
-  background-color: white;
-  text-align:left;
+export const TdWriter = styled(Td)`
   width: 20%;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
-  }
 `
 
-export const TdMessageTime = styled.td`
-  background-color: white;
-  text-align:left;
+export const TdMessageTime = styled(Td)`
   width: 70%;
-  //padding: 0px 50px 0px 0px;
+`
+
+export const Th = styled.th`
+  text-align: left;
+  background-color: white;
+  padding: 10px 10px 10px 0;
   @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
+    padding: 1px 1px 1px 0;
   }
 `
 export const ThMessage = styled.th`
@@ -326,68 +206,33 @@ export const ThMessage = styled.th`
   margin: 0;
   font-weight: normal !important;
   text-align: left !important;
-  //padding: 10px 10px 10px 0;
-  @media (max-width: 768px) {
-    padding: 1px 1px 1px 0;
+`
+
+export const TdCreator = styled(Td)`
+  width: 65%;
+  @media (max-width: 992px) {
+    width: 40%;
   }
 `
 
-export const TdCreator = styled.td`
-  background-color: white;
-  text-align:left;
-  width: 40%;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
-  }
-`
-
-export const TdCount = styled.td`
-  background-color: white;
-  text-align:left;
+export const TdCount = styled(Td)`
   width: 10%;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
+  @media (max-width: 992px) {
+    width: 20%;
   }
 `
 
-export const TdTime = styled.td`
-  background-color: white;
-  text-align:left;
-  width: 30%;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
+export const TdTime = styled(Td)`
+  width: 15%;
+  @media (max-width: 992px) {
+    width: 20%;
   }
 `
 
-export const TdButton = styled.td`
-  background-color: white;
-  text-align:left;
-  width: 10%;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
-  }
-`
-
-export const SaveButton = styled.div`
-  background-color: white;
-  text-align:left;
-  width: 10%;
-  //padding: 0px 50px 0px 0px;
-  @media (max-width: 768px) {
-    padding: 0px 5px 0px 0px;
-  }
-`
-
-export const Th = styled.th`
-  text-align:left;
-  background-color: white;
-  padding: 10px 10px 10px 0;
-  @media (max-width: 768px) {
-    padding: 1px 1px 1px 0;
+export const TdButton = styled(Td)`
+  width: 5%;
+  @media (max-width: 992px) {
+    width: 10%;
   }
 `
 
@@ -395,14 +240,9 @@ export const Container = styled.div`
   margin-top: 1%;
   margin-left: 15%;
   margin-right: 15%;
-  font-family: Roboto;
   @media (max-width: 768px) {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 2%;
+    margin-right: 2%;
   }
 `
 
@@ -410,16 +250,15 @@ export const SubContainer = styled.div`
   margin-top: 1%;
   margin-left: 20%;
   margin-right: 20%;
-  font-family: Roboto;
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     margin-left: auto;
     margin-right: auto;
   }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
+  @media (min-width: 600px) {
+    margin-left: 10%;
+    margin-right: 10%;
   }
-  @media (min-width: 1500px) {
+  @media (min-width: 992px) {
     margin-left: 30%;
     margin-right: 30%;
   }
@@ -429,18 +268,13 @@ export const UpperSubContainer = styled.div`
   margin-top: 1%;
   margin-left: 20%;
   margin-right: 2%;
-  font-family: Roboto;
-  @media (max-width: 1499px) {
-    margin-left: 10%;
-    margin-right: 10%;
-  }
   @media (max-width: 768px) {
     margin-left: auto;
     margin-right: auto;
   }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
+  @media (max-width: 1499px) {
+    margin-left: 10%;
+    margin-right: 10%;
   }
   @media (min-width: 1500px) {
     margin-left: 15%;
@@ -452,14 +286,9 @@ export const WelcomeContainer = styled.div`
   margin-top: 1%;
   margin-left: 30%;
   margin-right: 30%;
-  font-family: Roboto;
   @media (max-width: 768px) {
     margin-left: auto;
     margin-right: auto;
-  }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
   }
 `
 
@@ -467,18 +296,13 @@ export const TableContainer = styled.div`
   margin-top: 1%;
   margin-left: 20%;
   margin-right: 2%;
-  font-family: Roboto;
-  @media (max-width: 1499px) {
-    margin-left: 10%;
-    margin-right: 10%;
-  }
   @media (max-width: 768px) {
     margin-left: auto;
     margin-right: auto;
   }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
+  @media (min-width: 768px) {
+    margin-left: 10%;
+    margin-right: 10%;
   }
   @media (min-width: 1500px) {
     margin-left: 15%;
@@ -489,14 +313,9 @@ export const TableContainer = styled.div`
 export const MessagesTableContainer = styled.div`
   margin-top: 1%;
   margin-left: 0%;
-  font-family: Roboto;
   @media (max-width: 768px) {
     margin-left: auto;
     margin-right: auto;
-  }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
   }
 `
 
@@ -504,14 +323,9 @@ export const ModifyingContainer = styled.div`
   margin-top: 10%;
   margin-left: 30%;
   margin-right: 30%;
-  font-family: Roboto;
   @media (max-width: 768px) {
     margin-left: auto;
     margin-right: auto;
-  }
-  @media (max-width: 280px) {
-    margin-left: 0;
-    margin-right: 0;
   }
 `
 
@@ -543,6 +357,3 @@ export const ConfirmingDialogBody = styled.div`
   color: #666;
 `
 
-export const Hr = styled.hr`
-  border: 1px solid;
-`

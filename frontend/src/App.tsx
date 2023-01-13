@@ -8,9 +8,16 @@ import Register from "./pages/Register"
 import Topics from "./pages/Topics"
 import Topic from "./pages/Topic"
 import {
-  Container, Hr, H1, MainHeaderLink, NavBar, NavLink
+  Container, H1, MainHeaderLink, NavBar, NavLink
 } from "./styles/styles"
 import { useNavigate } from "react-router-dom"
+import { createGlobalStyle } from "styled-components"
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    font-family: 'Noto Sans', sans-serif
+  }
+`
 
 const App = () => {
   const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
@@ -36,6 +43,7 @@ const App = () => {
 
   return (
     <Container>
+      <GlobalStyle />
       <H1><MainHeaderLink to={"/"}>Our Forum</MainHeaderLink></H1>
       <NavBar>
         {userLoggedIn?
