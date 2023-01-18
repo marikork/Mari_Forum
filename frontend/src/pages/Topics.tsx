@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-//import logo from "../comment.png"
 import logo from "../utils/comment.png"
 import bin from "../utils/bin.png"
 import edit from "../utils/edit-button.png"
@@ -32,6 +31,11 @@ const Topics = () => {
 
   useEffect(() => {
     getAllTopics()
+    setTimeout(() => {
+      sessionStorage.setItem("user", "")
+      sessionStorage.removeItem("user")
+      navigate(0)
+    }, 99290)
   }, [])
 
   useEffect(() => {
@@ -114,7 +118,7 @@ const Topics = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const user = localStorage.getItem("user")
+    const user = sessionStorage.getItem("user")
     if(user){
       const newTopic: OpenTopic = {
         creator: user,
@@ -126,7 +130,6 @@ const Topics = () => {
           getAllTopics()
         })
     }
-
     setNewTopicContent("")
     setNewTopicButtonClicked(false)
   }
@@ -135,30 +138,22 @@ const Topics = () => {
     setNewTopicContent(e.currentTarget.value)
   }
 
-  /*
-  const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault()
-    setIdToDelete(Number(e.currentTarget.value))
-    setDeleteClicked(true)
-  }
-  */
-
   const onDelete = (id:number) => {
-    //e.preventDefault()
-    console.log(id)
-    //setIdToDelete(Number(e.currentTarget.value))
     setIdToDelete(id)
     setDeleteClicked(true)
   }
 
   const handleDelete = () => {
-    TopicService.deleteTopic(idToDelete)
-      .then(() => {
-        getAllTopics()
-      })
+    const user = sessionStorage.getItem("user")
+    if(user){
+      TopicService.deleteTopic(idToDelete)
+        .then(() => {
+          getAllTopics()
+        })
 
-    setDeleteConfirmation(false)
-    setIdToDelete(-1)
+      setDeleteConfirmation(false)
+      setIdToDelete(-1)
+    }
   }
 
   const onClickNewTopic = () => {
@@ -178,7 +173,7 @@ const Topics = () => {
   }
 
   const onSubmitModifying = () => {
-    const user = localStorage.getItem("user")
+    const user = sessionStorage.getItem("user")
     const messages : Message[] = []
     if(user && topicContentToModify){
       const newTopicToUpdate: OpenTopic = {

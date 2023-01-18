@@ -29,17 +29,17 @@ const Login = () => {
       try{
         LoginService.loginUser(userName, password)
           .then((response) => {
-            localStorage.setItem("user", userName)
-            localStorage.setItem("token", response.data)
-            const currentTime = new Date()
-            localStorage.setItem("timeTokenCreated", currentTime.toString())
+            //localStorage.setItem("user", userName)
+            //localStorage.setItem("token", response.data)
+            //const currentTime = new Date()
+            //localStorage.setItem("timeTokenCreated", currentTime.toString())
+            sessionStorage.setItem("user", userName)
             navigate(-1)
           })
           .catch((error) => {
             console.log("LoginServicen catchissä error on ", error)
             setError(true)
             if(error.response.status===403){
-              console.log("on 403")
               setErrorMessage("Username or password is not valid")
             }else{
               setErrorMessage("There was an error")
@@ -50,7 +50,7 @@ const Login = () => {
             }, 2000)
           })
       }catch(error){
-        console.log("Catchissä error on ",error)
+        setErrorMessage("There was an error")
       }
     }
   }

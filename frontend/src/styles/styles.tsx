@@ -48,7 +48,7 @@ export const Button = styled.button`
   background-color: #00b77a;
   border-style: none;
   cursor: pointer;
-  :disabled {
+  &:disabled {
     background-color: #a6a6a6;
     cursor: auto;
   }
@@ -162,13 +162,14 @@ export const Table = styled.table`
   background-color: white;
   width: 100%;
   border-style: ridge;
-  margin-bottom: 3%;
+  margin-bottom: 2%;
 `
 
 export const TableMessages = styled(Table)`
   border-style: none;
   border-top-style: solid;
   border-top-color: rgba(0, 0, 255, 0.47);
+  margin-bottom: 1%;
 `
 
 export const TBody = styled.tbody`
@@ -177,7 +178,7 @@ export const TBody = styled.tbody`
 
 export const Tr = styled.tr`
   background-color: white;
-  padding: 10px 10px 10px 0;
+  //padding: 10px 10px 10px 0;
 `
 
 export const Td = styled.td`
@@ -196,7 +197,7 @@ export const TdMessageTime = styled(Td)`
 export const Th = styled.th`
   text-align: left;
   background-color: white;
-  padding: 10px 10px 10px 0;
+  padding: 5px 5px 5px 5px;
   @media (max-width: 768px) {
     padding: 1px 1px 1px 0;
   }
@@ -210,6 +211,7 @@ export const ThMessage = styled.th`
 
 export const TdCreator = styled(Td)`
   width: 65%;
+  padding: 0 0 0 5px;
   @media (max-width: 992px) {
     width: 40%;
   }

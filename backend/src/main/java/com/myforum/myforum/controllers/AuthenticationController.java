@@ -30,11 +30,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<String> authenticate(
             @RequestBody AuthenticationRequest request) {
-        System.out.println("loginin alussa");
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        System.out.println("authenticationManagerin kutsun jälkeen");
         final UserDetails user = userDao.findUserByEmail(request.getEmail());
         if (user != null) {
             return ResponseEntity.ok(jwtUtils.generateToken(user));

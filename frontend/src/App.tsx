@@ -15,7 +15,8 @@ import { createGlobalStyle } from "styled-components"
 
 const GlobalStyle = createGlobalStyle`
   * {
-    font-family: 'Noto Sans', sans-serif
+    font-family: 'Noto Sans', sans-serif;
+    color: #333333
   }
 `
 
@@ -24,19 +25,16 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(localStorage.getItem("user")){
+    if(sessionStorage.getItem("user")){
       setUserLoggedIn(true)
+    }else{
+      setUserLoggedIn(false)
     }
   }, [])
 
   const onLogoutClick = () => {
-
-    localStorage.setItem("user", "")
-    localStorage.removeItem("user")
-    localStorage.setItem("token", "")
-    localStorage.removeItem("token")
-    localStorage.setItem("timeTokenCreated", "")
-    localStorage.removeItem("timeTokenCreated")
+    sessionStorage.setItem("user", "")
+    sessionStorage.removeItem("user")
     setUserLoggedIn(false)
     navigate(0)
   }
@@ -44,7 +42,7 @@ const App = () => {
   return (
     <Container>
       <GlobalStyle />
-      <H1><MainHeaderLink to={"/"}>Our Forum</MainHeaderLink></H1>
+      <H1><MainHeaderLink to="/">Our Forum</MainHeaderLink></H1>
       <NavBar>
         {userLoggedIn?
           <NavLink onClick={onLogoutClick} to="/">Logout</NavLink>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.myforum.myforum.models.Topic;
 import com.myforum.myforum.repository.MessageRepository;
 import com.myforum.myforum.repository.TopicRepository;
+import com.myforum.myforum.exception.TopicNotFoundException;
 
 @Service
 public class TopicServiceImpl  implements TopicService{
@@ -21,14 +22,12 @@ public class TopicServiceImpl  implements TopicService{
     @Override
     public List<Topic> getAllTopics() {
         List<Topic> topics = topicRepository.findAll();
-
         return topics;
     }
 
     @Override
-    public Optional<Topic> getTopicById(Long id) {
-        Optional<Topic> topic = topicRepository.findById(id);
-
+    public Topic getTopicById(Long id) {
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new TopicNotFoundException(id));
         return topic;
     }
 
@@ -42,7 +41,6 @@ public class TopicServiceImpl  implements TopicService{
         Topic topic = topicRepository.findById(id).get();
         topic.setContent(topicToUpdate.getContent());
         topic.setCreator(topicToUpdate.getCreator());
-
         Topic _topic = topicRepository.save(topic);
         return _topic;
     }
@@ -51,6 +49,5 @@ public class TopicServiceImpl  implements TopicService{
     public void deleteTopic(Long id) {
         topicRepository.deleteById(id);
         messageRepository.deleteByTopicId(id);
-        
     }
 }

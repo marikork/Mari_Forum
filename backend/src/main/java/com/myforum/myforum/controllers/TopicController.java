@@ -21,7 +21,7 @@ public class TopicController {
     }
 
     @GetMapping("/topics/{id}")
-    public Optional<Topic> getTopicById(@PathVariable(value = "id") Long Id) {
+    public Topic getTopicById(@PathVariable(value = "id") Long Id) {
         return topicService.getTopicById(Id);
     }
 

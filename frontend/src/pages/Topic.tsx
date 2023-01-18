@@ -19,7 +19,6 @@ const Topic = () => {
   const navigate = useNavigate()
   const [newMessageContent, setNewMessageContent] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
-  const [user, setUser] = useState("")
   const [newMessageButtonClicked, setNewMessageButtonClicked] = useState<boolean>(false)
   const [show, setShow] = useState(false)
   const [selected, setSelected] = useState<number>(-1)
@@ -28,10 +27,8 @@ const Topic = () => {
   useEffect (() => {
     getTopic()
     getMessages()
-    const currentUser = localStorage.getItem("user")
-    if(currentUser){
-      setUser(currentUser)
-    }else{
+    const user = sessionStorage.getItem("user")
+    if(!user){
       navigate(-1)
     }
   }, [])
@@ -59,7 +56,8 @@ const Topic = () => {
   const getTopic = async() => {
     let idToNumber = Number(id)
     idToNumber++
-    if(id){
+    const user = sessionStorage.getItem("user")
+    if(id && user){
       TopicService.getTopic(idToNumber)
         .then(response => {
           setTopic(response.data)
@@ -70,7 +68,8 @@ const Topic = () => {
   const getMessages = async() => {
     let idToNumber = Number(id)
     idToNumber++
-    if(id){
+    const user = sessionStorage.getItem("user")
+    if(id && user){
       TopicService.getMessages(idToNumber)
         .then(response => {
           const arrFromDB = response.data
@@ -88,7 +87,7 @@ const Topic = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const user = localStorage.getItem("user")
+    const user = sessionStorage.getItem("user")
     let idToNumber = Number(id)
     idToNumber++
     const time = new Date()
@@ -129,9 +128,9 @@ const Topic = () => {
   }
 
   const onSubmitModifying = () => {
-    const user = localStorage.getItem("user")
+    const user = sessionStorage.getItem("user")
     const time = new Date()
-    if(user&&messageToModify&&topic){
+    if(user && messageToModify && topic){
       const newMessageToUpdate: MessageWithTopicId = {
         id: messages[selected].id,
         writer: user,

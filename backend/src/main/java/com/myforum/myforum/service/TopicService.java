@@ -7,7 +7,7 @@ import com.myforum.myforum.models.Topic;
 public interface TopicService {
     
     List<Topic> getAllTopics();
-    Optional<Topic> getTopicById(Long id);
+    Topic getTopicById(Long id);
     Topic addTopic(Topic topic);
     Topic updateTopic(Topic topic, Long id);
     void deleteTopic(Long id);

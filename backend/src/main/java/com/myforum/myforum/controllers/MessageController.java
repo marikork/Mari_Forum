@@ -23,6 +23,7 @@ public class MessageController {
 
     @GetMapping("/topics/{id}/messages")
     public List<Message> getAllMessagesByTopicId(@PathVariable(value = "id") Long topicId) {
+        System.out.println("MessageControllerissa");
         return messageService.getAllMessagesByTopicId(topicId);
     }
 

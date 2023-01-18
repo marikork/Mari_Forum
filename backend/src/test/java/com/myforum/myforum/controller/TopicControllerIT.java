@@ -36,9 +36,12 @@ public class TopicControllerIT {
     public void getTopicById_GiveId_GetCorrectTopic() throws Exception 
     {
         long id = 4;
-        Optional<Topic> topic=topicService.getTopicById(id);
-        String actualCreator = topic.get().getCreator();
-        Long actualId = topic.get().getId();
+        //Optional<Topic> topic=topicService.getTopicById(id);
+        Topic topic=topicService.getTopicById(id);
+        //String actualCreator = topic.get().getCreator();
+        String actualCreator = topic.getCreator();
+        //Long actualId = topic.get().getId();
+        Long actualId = topic.getId();
 
         assertEquals("user1", actualCreator);
         assertEquals(id, actualId);
@@ -69,8 +72,10 @@ public class TopicControllerIT {
         topic.setCreator("user1");
         topic.setMessages(null);
         topicService.updateTopic(topic, id);
-        Optional<Topic> topicUpdated=topicService.getTopicById(id);
-        String updatedContent = topicUpdated.get().getContent();
+        //Optional<Topic> topicUpdated=topicService.getTopicById(id);
+        Topic topicUpdated=topicService.getTopicById(id);
+        //String updatedContent = topicUpdated.get().getContent();
+        String updatedContent = topicUpdated.getContent();
 
         assertEquals("updated", updatedContent);
         topic.setContent("testing");

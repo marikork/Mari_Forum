@@ -4,7 +4,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myforum.myforum.exception.MessageNotFoundException;
+import com.myforum.myforum.exception.TopicNotFoundException;
 import com.myforum.myforum.models.Message;
+import com.myforum.myforum.models.Topic;
 import com.myforum.myforum.repository.MessageRepository;
 import com.myforum.myforum.repository.TopicRepository;
 
@@ -19,10 +22,7 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public List<Message> getAllMessagesByTopicId(Long topicId) {
-        if (!topicRepository.existsById(topicId)) {
-            throw new Error("Not found Topic with id = " + topicId);
-        }
-
+        topicRepository.findById(topicId).orElseThrow(() -> new TopicNotFoundException(topicId));
         List<Message> messages = messageRepository.findByTopicId(topicId);
         return messages;
     }
@@ -32,13 +32,13 @@ public class MessageServiceImpl implements MessageService{
         Message message = topicRepository.findById(topicId).map(topic -> {
             messageRequest.setTopicId(topicId);
             return messageRepository.save(messageRequest);
-        }).orElseThrow(() -> new Error("Not found topic with id = " + topicId));
+        }).orElseThrow(() -> new TopicNotFoundException(topicId));
         return message;
     }
 
     @Override
     public Message updateMessage(Message messageRequest, Long id) {
-        Message message = messageRepository.findById(id).get();
+        Message message = messageRepository.findById(id).orElseThrow(() -> new MessageNotFoundException(id));
         message.setMessage(messageRequest.getMessage());
         message.setTimeCreated(messageRequest.getTimeCreated());
         message.setWriter(messageRequest.getWriter());
