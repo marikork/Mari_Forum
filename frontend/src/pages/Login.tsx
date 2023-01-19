@@ -28,11 +28,7 @@ const Login = () => {
     if(userName && password){
       try{
         LoginService.loginUser(userName, password)
-          .then((response) => {
-            //localStorage.setItem("user", userName)
-            //localStorage.setItem("token", response.data)
-            //const currentTime = new Date()
-            //localStorage.setItem("timeTokenCreated", currentTime.toString())
+          .then(() => {
             sessionStorage.setItem("user", userName)
             navigate(-1)
           })

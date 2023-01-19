@@ -6,8 +6,8 @@ import TopicService from "../services/TopicService"
 import edit from "../utils/edit-button.png"
 import {
   UpperSubContainer, Form, TextRow, ButtonRow, Button, CancelButton, ButtonToOpenForm, InputRow,
-  ContentRow, TBody, Tr, Td, InputTopicMessage, TableContainer, ButtonRowModify, ImageLink,
-  TdWriter, TdButton, TdMessageTime, ThMessage, InputModifyMessage, TableMessages, ButtonRowToOpenForm
+  ContentRow, TBody, Tr, Td, TableContainer, ButtonRowModify, ImageLink, Textarea, TextareaModify,
+  TdWriter, TdButton, TdMessageTime, ThMessage, TableMessages, ButtonRowToOpenForm
 } from "../styles/styles"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -77,7 +77,7 @@ const Topic = () => {
             return new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime()
           })
           arrFromDB.map((message) => {
-            const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours() + 2)
+            const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours())
             message.timeCreated = new Date(datetime)
           })
           setMessages(arrFromDB)
@@ -108,8 +108,9 @@ const Topic = () => {
     setNewMessageButtonClicked(false)
   }
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessageContent(e.currentTarget.value)
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.currentTarget.value.slice(0, 250)
+    setNewMessageContent(text)
   }
 
   const onClickNewMessage = () => {
@@ -145,8 +146,9 @@ const Topic = () => {
     }
   }
 
-  const handleModifyingMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessageToModify(e.currentTarget.value)
+  const handleModifyingMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.currentTarget.value.slice(0, 250)
+    setMessageToModify(text)
   }
 
   const clickModifyHandler = (index:number, message: string) => {
@@ -165,7 +167,7 @@ const Topic = () => {
             {newMessageButtonClicked?
               <Form onSubmit={onSubmit}>
                 <InputRow>
-                New message: <InputTopicMessage value={newMessageContent} onChange={handleMessageChange}/>
+                New message: <Textarea value={newMessageContent} onChange={handleMessageChange}/>
                 </InputRow>
                 <ButtonRow>
                   <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Save</Button>
@@ -184,7 +186,7 @@ const Topic = () => {
                       <Tr>
                         <Td>
                           <Form onSubmit={onSubmitModifying}>
-                            <InputModifyMessage value={messageToModify} onChange={handleModifyingMessageChange}/>
+                            <TextareaModify value={messageToModify} onChange={handleModifyingMessageChange}/>
                             <ButtonRowModify>
                               <Button type="submit" id="SaveModificationButton" disabled>Save</Button>
                             </ButtonRowModify>
@@ -195,7 +197,7 @@ const Topic = () => {
                     :
                     <TBody>
                       <Tr>
-                        <ThMessage>
+                        <ThMessage colSpan={3}>
                           {message.message}
                         </ThMessage>
                       </Tr>

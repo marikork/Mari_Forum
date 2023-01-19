@@ -41,6 +41,7 @@ public class TopicServiceImpl  implements TopicService{
         Topic topic = topicRepository.findById(id).get();
         topic.setContent(topicToUpdate.getContent());
         topic.setCreator(topicToUpdate.getCreator());
+        topic.setTimeCreated(topicToUpdate.getTimeCreated());
         Topic _topic = topicRepository.save(topic);
         return _topic;
     }

@@ -64,29 +64,26 @@ export const ButtonToOpenForm = styled(Button)`
 export const Form = styled.form`
   
 `
-export const Input = styled.input`
-  width: 280px;
+
+export const Textarea = styled.textarea`
+  width: 100%;
   margin-left: 5%;
-  max-width: 100%;
+  rows: 2;
+  resize: none;
+  maxLength: 250;
+  font-size: 16px;
 `
-export const InputTopicMessage = styled(Input)`
-  width: 380px;
-  @media (max-width: 1499px) {
-    width: 580px;
-  }
-  @media (min-width: 1500px) {
-    width: 680px;
-  }
-`
-export const InputModify = styled(Input)`
-  width: 335px;
+export const TextareaModify = styled(Textarea)`
+  width: 95%;
   margin-left: 0%;
 `
-export const InputModifyMessage = styled(Input)`
-  width: 335px;
-  margin-left: 0%;
-  font-size: 18px;
+
+export const Input = styled.input`
+  width: 65%;
+  margin-left: 5%;
+  max-width: 65%;
 `
+
 export const H2 = styled.h2`
   font-size: 24px;
 `
@@ -101,7 +98,7 @@ export const InfoText = styled.p`
 `
 export const InfoTextShort = styled(InfoText)`
   margin-bottom: 1%;
-  width: 120px;
+  width: 80px;
 `
 export const ErrorInfo = styled(InfoText)`
   font-size: 18px;
@@ -203,7 +200,7 @@ export const Th = styled.th`
   }
 `
 export const ThMessage = styled.th`
-  font-size: 18px;
+  font-size: 16px;
   margin: 0;
   font-weight: normal !important;
   text-align: left !important;

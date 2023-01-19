@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import Topics from "./Topics"
-import { useNavigate } from "react-router-dom"
 import {
   H2, WelcomeContainer, LinkRow, Button, InfoText
 } from "../styles/styles"

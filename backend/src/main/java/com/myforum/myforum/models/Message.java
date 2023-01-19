@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import com.myforum.myforum.models.Topic;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
@@ -32,6 +33,6 @@ public class Message {
     private Long topicId;
 
     @Column(name = "time_created")
-    private LocalDateTime timeCreated;
+    private ZonedDateTime timeCreated;
     
 }

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react"
 import logo from "../utils/comment.png"
 import bin from "../utils/bin.png"
 import edit from "../utils/edit-button.png"
-import { Message, OpenTopic, TopicWithTime } from "../types"
+import { Message, OpenTopic, TopicWithTimeToCompare } from "../types"
 import TopicService from "../services/TopicService"
 import { useNavigate } from "react-router-dom"
 import Confirm from "./Confirm"
 import {
   H2, UpperSubContainer, Form, InputRow, ButtonRow, Button, CancelButton, ButtonToOpenForm,
-  Table, TBody, Tr, Th, TableContainer, InputTopicMessage, TopicContent,
-  TdCreator, TdCount, TdTime, TdButton, Td, InputModify, ButtonRowModify, ImageLink, ButtonRowToOpenForm
+  Table, TBody, Tr, Th, TableContainer, TopicContent, Textarea, TextareaModify,
+  TdCreator, TdCount, TdTime, TdButton, Td, ButtonRowModify, ImageLink, ButtonRowToOpenForm
 } from "../styles/styles"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -18,7 +18,7 @@ dayjs.extend(relativeTime)
 const Topics = () => {
   const [newTopicContent, setNewTopicContent] = useState("")
   const [topics, setTopics] = useState<OpenTopic[]>([])
-  const [topicsWithTime, setTopicsWithTime] = useState<TopicWithTime[]>([])
+  const [topicsWithTime, setTopicsWithTime] = useState<TopicWithTimeToCompare[]>([])
   const [newTopicButtonClicked, setNewTopicButtonClicked] = useState<boolean>(false)
   const navigate = useNavigate()
   const [show, setShow] = useState(false)
@@ -35,11 +35,11 @@ const Topics = () => {
       sessionStorage.setItem("user", "")
       sessionStorage.removeItem("user")
       navigate(0)
-    }, 99290)
+    }, 590000)
   }, [])
 
   useEffect(() => {
-    setTimeToTopics()
+    setTimeToCompareToTopics()
   }, [topics])
 
   useEffect(() => {
@@ -75,8 +75,8 @@ const Topics = () => {
       })
   }
 
-  const setTimeToTopics = () => {
-    const topicsTimed:TopicWithTime[] = []
+  const setTimeToCompareToTopics = () => {
+    const topicsTimed:TopicWithTimeToCompare[] = []
     if(topics){
       topics.map((topic) => {
         const messagesInTopic = topic.messages
@@ -84,10 +84,10 @@ const Topics = () => {
           return new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime()
         })
         messagesInTopic.map((message) => {
-          const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours() + 2)
+          const datetime=new Date(message.timeCreated).setHours(new Date(message.timeCreated).getHours())
           message.timeCreated = new Date(datetime)
         })
-        let topicWithTime: TopicWithTime
+        let topicWithTime: TopicWithTimeToCompare
         if(messagesInTopic[0]){
           topicWithTime = {
             id: topic.id,
@@ -103,8 +103,8 @@ const Topics = () => {
             creator: topic.creator,
             content: topic.content,
             messages: topic.messages,
-            time: null,
-            timeToCompare: new Date()
+            time: topic.timeCreated,
+            timeToCompare: topic.timeCreated
           }
         }
         topicsTimed.push(topicWithTime)
@@ -119,11 +119,14 @@ const Topics = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const user = sessionStorage.getItem("user")
+    const time = new Date()
+    console.log("time on ", time)
     if(user){
       const newTopic: OpenTopic = {
         creator: user,
         content: newTopicContent,
-        messages: []
+        messages: [],
+        timeCreated: time
       }
       TopicService.createTopic(newTopic)
         .then(() => {
@@ -134,8 +137,9 @@ const Topics = () => {
     setNewTopicButtonClicked(false)
   }
 
-  const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTopicContent(e.currentTarget.value)
+  const handleTopicChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.currentTarget.value.slice(0, 250)
+    setNewTopicContent(text)
   }
 
   const onDelete = (id:number) => {
@@ -175,12 +179,14 @@ const Topics = () => {
   const onSubmitModifying = () => {
     const user = sessionStorage.getItem("user")
     const messages : Message[] = []
+    const time = new Date()
     if(user && topicContentToModify){
       const newTopicToUpdate: OpenTopic = {
         id: selectedId,
         creator: user,
         content: topicContentToModify,
-        messages: messages
+        messages: messages,
+        timeCreated: time
       }
       TopicService.updateTopic(selectedId, newTopicToUpdate)
         .then(() => {
@@ -189,8 +195,9 @@ const Topics = () => {
     }
   }
 
-  const handleModifyingContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTopicContentToModify(e.currentTarget.value)
+  const handleModifyingContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.currentTarget.value.slice(0, 250)
+    setTopicContentToModify(text)
   }
 
   const onCancelModifying = () => {
@@ -207,7 +214,7 @@ const Topics = () => {
         {newTopicButtonClicked?
           <Form onSubmit={onSubmit}>
             <InputRow>
-              Write a new topic: <InputTopicMessage value={newTopicContent} onChange={handleTopicChange}/>
+              Write a new topic: <Textarea value={newTopicContent} onChange={handleTopicChange}/>
             </InputRow>
             <ButtonRow>
               <CancelButton onClick={onCancel}>Cancel</CancelButton><Button type="submit" id="SaveButton" disabled>Save</Button>
@@ -226,7 +233,7 @@ const Topics = () => {
                 <Tr>
                   <Td>
                     <Form onSubmit={onSubmitModifying}>
-                      <InputModify value={topicContentToModify} onChange={handleModifyingContentChange}/>
+                      <TextareaModify value={topicContentToModify} onChange={handleModifyingContentChange}/>
                       <ButtonRowModify>
                         <Button type="submit" id="SaveModificationButton" disabled>Save</Button>
                       </ButtonRowModify>
@@ -237,7 +244,7 @@ const Topics = () => {
               :
               <TBody>
                 <Tr>
-                  <Th>
+                  <Th colSpan={5}>
                     <TopicContent to={`/topics/${topic.id - 1}`}>{topic.content}</TopicContent>
                   </Th>
                 </Tr>

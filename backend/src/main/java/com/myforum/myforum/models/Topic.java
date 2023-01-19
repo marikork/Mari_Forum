@@ -10,6 +10,9 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 //import jakarta.persistence.*;
@@ -40,5 +43,7 @@ public class Topic {
     @JoinColumn(name="topic_id", referencedColumnName = "id")
     private List<Message> messages;
 
+    @Column(name = "time_created")
+    private ZonedDateTime timeCreated;
     
 }

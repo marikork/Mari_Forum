@@ -41,7 +41,7 @@ public class JwtUtils {
         return createToken(claims, userDetails);
     }
 
-    private int millisecs = 99290; //1000 * 60 * 60 * 10;
+    private int millisecs = 600000;//99290; //1000 * 60 * 60 * 10;
     private String createToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(claims)
