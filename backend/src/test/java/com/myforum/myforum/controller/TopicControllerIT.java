@@ -3,9 +3,11 @@ package com.myforum.myforum.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.myforum.myforum.exception.TopicNotFoundException;
 import com.myforum.myforum.models.Topic;
 import com.myforum.myforum.repository.TopicRepository;
 import com.myforum.myforum.service.TopicService;
@@ -35,16 +37,23 @@ public class TopicControllerIT {
     @Test
     public void getTopicById_GiveId_GetCorrectTopic() throws Exception 
     {
-        long id = 4;
-        //Optional<Topic> topic=topicService.getTopicById(id);
+        long id = 2;
         Topic topic=topicService.getTopicById(id);
-        //String actualCreator = topic.get().getCreator();
         String actualCreator = topic.getCreator();
-        //Long actualId = topic.get().getId();
         Long actualId = topic.getId();
 
         assertEquals("user1", actualCreator);
         assertEquals(id, actualId);
+    }
+
+    @Test
+    public void getTopicById_GiveIncorrectId_GetException() throws Exception 
+    {
+        long id = -1;
+        Exception exception = Assertions.assertThrows(TopicNotFoundException.class, () -> {
+            topicService.getTopicById(id);
+        });
+        Assertions.assertEquals("Topic with Id -1 not found", exception.getMessage());
     }
     
     @Test
@@ -66,15 +75,13 @@ public class TopicControllerIT {
     @Test
     public void UpdateTopic_GiveNewContent_ContentChangedAfterUpdate() throws Exception 
     {
-        long id = 14;
+        long id = 6;
         Topic topic = new Topic();
         topic.setContent("updated");
         topic.setCreator("user1");
         topic.setMessages(null);
         topicService.updateTopic(topic, id);
-        //Optional<Topic> topicUpdated=topicService.getTopicById(id);
         Topic topicUpdated=topicService.getTopicById(id);
-        //String updatedContent = topicUpdated.get().getContent();
         String updatedContent = topicUpdated.getContent();
 
         assertEquals("updated", updatedContent);
