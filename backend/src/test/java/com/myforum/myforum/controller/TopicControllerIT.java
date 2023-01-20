@@ -14,8 +14,11 @@ import com.myforum.myforum.service.TopicService;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.time.ZonedDateTime;
+//import java.time.zone.ZoneOffsetTransitionRule;
 
 @SpringBootTest
 public class TopicControllerIT {
@@ -62,9 +65,11 @@ public class TopicControllerIT {
         List<Topic> topics=topicService.getAllTopics();
         int size = topics.size();
         Topic topic = new Topic();
+        ZonedDateTime now = ZonedDateTime.now(); 
         topic.setContent("testing");
         topic.setCreator("user1");
         topic.setMessages(null);
+        topic.setTimeCreated(now);
         topicService.addTopic(topic);
         List<Topic> topicsAfter=topicService.getAllTopics();
         int sizeAfter = topicsAfter.size();
